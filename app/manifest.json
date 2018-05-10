@@ -1,7 +1,7 @@
 {
   "content_security_policy": "script-src 'self' https://ru.aliexpress.com/ 'unsafe-eval'; object-src 'self'","name": "Get Image",
-  "short_name": "Get Image",
-  "description": "Easy way to get image on every website you need!",
+  "short_name": "Symplometro",
+  "description": "Easy way to get how many events exist!",
   "version": "0.0.9",
   "manifest_version": 2,
   "icons": {
