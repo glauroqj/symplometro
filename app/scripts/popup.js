@@ -1,8 +1,8 @@
 (function() {
 
 	new Vue({
-		name: 'Get-Image',
-		el: '#getImage',
+		name: 'Symplometro',
+		el: '#symplometro',
 		data: {
 			version: '0.0.9',
 		},
@@ -11,7 +11,7 @@
 		},
 		created() {
 			/* call ACTION to load info from localstore */
-			window.store_popup.dispatch('popupLoadAction');
+			// window.store_popup.dispatch('popupLoadAction');
 		},
 		computed: {
 			state() {
@@ -19,11 +19,8 @@
 			}
 		},
 		methods: {
-			selectImage() {
-				window.store_popup.dispatch('selectImageAction');
-			},
-			openGallery() {
-				window.store_popup.dispatch('openGalleryAction');
+			getInfo() {
+				window.store_popup.dispatch('getInfoAction');
 			}
 		}
 	});

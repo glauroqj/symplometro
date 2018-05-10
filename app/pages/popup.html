@@ -3,7 +3,7 @@
 
 <head lang="pt-br">
     <meta charset="UTF-8">
-    <title>Get Image</title>
+    <title>Symplometro</title>
     <link rel="stylesheet" href="bootstrap.min.css">
     <link rel="stylesheet" href="base.css">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -11,23 +11,22 @@
 </head>
 
 <body>
-    <div id="getImage">
+    <div id="symplometro">
         <div class="container">
             <div class="row">
-
                 <div class="card border-light">
                   <div class="card-body">
                     <h4 class="card-title mb-3">
-                        Hello!
+                        Counter
                         <span class="pull-right">
-                            <button type="button" class="btn btn-sm btn-outline-primary" :disabled="state.emptyStore" v-on:click="openGallery"><i class="fa fa-image"></i> 
-                                {{state.textGallery}} <span class="badge badge-light ml-2">{{state.countImages.length}}</span>
+                            <button type="button" class="btn btn-sm btn-outline-primary" v-on:click="getInfo"><i class="fa fa-refresh"></i> 
+                                Reload
                             </button>
                         </span>
                     </h4>
                     <p class="card-text">Activate the extension and click on the image, all the clicked images are sent to your gallery!</p>
                     <p class="mt-4">
-                        <button type="button" class="btn btn-block btn-success" v-on:click="selectImage">Activate Extension</button>
+                        <button type="button" class="btn btn-block btn-success">Activate Extension</button>
                     </p>
                 </div>
             </div>
