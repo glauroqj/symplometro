@@ -13,7 +13,7 @@
 		let verifyLocalStorage = localStorage.getItem('Count-Event');
 
 		if( verifyLocalStorage != '' && verifyLocalStorage != undefined ) {
-			console.log( 'REFRESH call info ', verifyLocalStorage )
+			// console.log( 'REFRESH call info ', verifyLocalStorage )
 			getEvents('refresh');
 			return false;
 		}
@@ -39,7 +39,7 @@
 			}
 		})
 		.fail(function(error) {
-			console.log('Error: ', error)
+			// console.log('Error: ', error)
 		});
 	};
 

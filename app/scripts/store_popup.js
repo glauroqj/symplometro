@@ -35,7 +35,7 @@
           let verifyLocalStorage = localStorage.getItem('Count-Event');
 
           if( verifyLocalStorage != '' && verifyLocalStorage != undefined ) {
-            console.log( 'Exist events: ', verifyLocalStorage )
+            // console.log( 'Exist events: ', verifyLocalStorage )
             let payload = {
               events: verifyLocalStorage
             };
