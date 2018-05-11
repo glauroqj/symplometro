@@ -1,7 +1,15 @@
 (function() {
+	/* initial verification */
+	getEvents('init');
+	// let verifyLocalStorage = localStorage.getItem('Count-Event');
+	// if( verifyLocalStorage === '' && verifyLocalStorage === undefined ) {
+	// 	/* init */
+	// 	console.log('INITIAL call info')
+		
+	// 	return false;
+	// }
 
 	setInterval(()=> {
-
 		let verifyLocalStorage = localStorage.getItem('Count-Event');
 
 		if( verifyLocalStorage != '' && verifyLocalStorage != undefined ) {
@@ -9,12 +17,7 @@
 			getEvents('refresh');
 			return false;
 		}
-
-		/* init */
-		console.log('INITIAL call info')
-		getEvents('init');
-
-	}, 10000);
+	}, 1.5e+6); /* 1 minute */
 
 	function getEvents(action) {
 		let urlCall = 'https://www.sympla.com.br/index.html'
@@ -51,7 +54,7 @@
 			// let notification = new Notification('', options);
 			let notification = chrome.notifications.create('', options);
 			setTimeout(() => {
-				notification.close();
+				// notification.close();
 			}, 15000);
 			// notification.onclick = () => {
 			// 	chrome.tabs.create({
@@ -76,7 +79,7 @@
 					// let notification = new Notification('',options);
 					let notification = chrome.notifications.create('', options);
 					setTimeout(() => {
-						notification.close();
+						// notification.close();
 					}, 15000);
 					// notification.onclick = () => {
 					// 	chrome.tabs.create({

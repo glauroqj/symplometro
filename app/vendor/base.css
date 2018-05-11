@@ -72,7 +72,8 @@ body.find-all-images img {
 	padding: 3px 0;
 }
 .information  p i {
-	font-size: 20px;
+	font-size: 13px;
+	color: #0098ff;
 }
 /* GALLERY */
 #gallery body, #getImage body {
