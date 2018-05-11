@@ -10,8 +10,6 @@
 
 		},
 		created() {
-			/* init loading... */
-			// window.store_popup.dispatch('popupLoadingAction', true);
 			/* verify data info */
 			window.store_popup.dispatch('popupGetInfoAction');
 		},

@@ -12,6 +12,7 @@
       mutations: {
         popupGetInfoMutation(state, payload) {
           window.store_popup.state.popup = payload;
+          window.store_popup.dispatch('popupLoadingAction', false);
         },
         popupLoadingMutation(state, payload) {
           window.store_popup.state.loading = payload;
@@ -19,7 +20,7 @@
       }, /* mutations */
       actions: {
         popupLoadingAction(state, action) {
-          console.log('Init loading', action)
+          // console.log('Init loading', action)
           if( action == true ) {
             window.store_popup.commit('popupLoadingMutation', action);
             return false;
@@ -27,13 +28,30 @@
           /* removing loading timeout 750ms */
           setTimeout(()=> {
             window.store_popup.commit('popupLoadingMutation', action);
-          }, 750);
+          }, 550);
         },
         popupGetInfoAction() {
           /* verify on local storage */
-          setTimeout(()=> {
-            window.store_popup.dispatch('popupLoadingAction', false);
-          }, 3000)
+          let verifyLocalStorage = localStorage.getItem('Count-Event');
+
+          if( verifyLocalStorage != '' && verifyLocalStorage != undefined ) {
+            console.log( 'Exist events: ', verifyLocalStorage )
+            let payload = {
+              events: verifyLocalStorage
+            };
+            window.store_popup.commit('popupGetInfoMutation', payload);
+            return false;
+          }
+
+          /* info to wait next request */
+          let payload = {
+            events: 'Aguardando receber os dados...'
+          };
+          window.store_popup.commit('popupGetInfoMutation', payload);
+
+          // setTimeout(()=> {
+          //   window.store_popup.dispatch('popupLoadingAction', false);
+          // }, 3000)
           // let urlCall = 'https://www.sympla.com.br/index.html'
           // $.ajax({
           //   url: urlCall,

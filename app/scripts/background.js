@@ -1,22 +1,22 @@
 (function() {
 
 	setInterval(()=> {
-		localStorage.setItem('Count-Event', '1500');
 
 		let verifyLocalStorage = localStorage.getItem('Count-Event');
 
 		if( verifyLocalStorage != '' && verifyLocalStorage != undefined ) {
-			console.log( 'Exist events: ', verifyLocalStorage )
+			console.log( 'REFRESH call info ', verifyLocalStorage )
+			getEvents('refresh');
 			return false;
 		}
 
 		/* init */
-		getEvents();
+		console.log('INITIAL call info')
+		getEvents('init');
 
-	}, 5000);
+	}, 10000);
 
-	function getEvents() {
-
+	function getEvents(action) {
 		let urlCall = 'https://www.sympla.com.br/index.html'
 		$.ajax({
 			url: urlCall,
@@ -27,21 +27,76 @@
 			crossDomain: true,
 		})
 		.done(function(data) {
-			let parser = new DOMParser();
-			let domResponse = parser.parseFromString(data, 'text/html');
-			/* console.log( $(domResponse).find('h1 span strong').text() ); */
+			const parser = new DOMParser();
+			const domResponse = parser.parseFromString(data, 'text/html');
 			const countEvents = $(domResponse).find('h1 span strong').text();
-			// let payload = {
-			// 	events: countEvents
-			// };
 			localStorage.setItem('Count-Event', countEvents);
-			// window.store_popup.commit('getInfoMutation', payload);
+			if(action === 'refresh') {
+				showNotification(countEvents);
+			}
 		})
 		.fail(function(error) {
 			console.log('Error: ', error)
 		});
-
 	};
+
+	function showNotification(data) {
+		let options = {
+			type: 'basic',
+			iconUrl: './images/symplometro-20.png',
+			message: data,
+			title: 'Eventos Online'
+		}
+		if (Notification.permission === 'granted') {
+			// let notification = new Notification('', options);
+			let notification = chrome.notifications.create('', options);
+			setTimeout(() => {
+				notification.close();
+			}, 15000);
+			// notification.onclick = () => {
+			// 	chrome.tabs.create({
+			// 		url: chrome.extension.getURL('pages/popup.html'),
+			// 		active: true
+			// 	}, function(tab) {
+			// 		chrome.windows.create({
+			// 			tabId: tab.id,
+			// 			type: 'popup',
+			// 			height: 500, 
+			// 			width: 550,
+			// 			focused: true
+			// 		});
+			// 	});
+			// }
+			return false;
+		}
+
+		if (Notification.permission !== 'denied') {
+			Notification.requestPermission(function (permission) {
+				if (permission === 'granted') {
+					// let notification = new Notification('',options);
+					let notification = chrome.notifications.create('', options);
+					setTimeout(() => {
+						notification.close();
+					}, 15000);
+					// notification.onclick = () => {
+					// 	chrome.tabs.create({
+					// 		url: chrome.extension.getURL('pages/popup.html'),
+					// 		active: true
+					// 	}, function(tab) {
+					// 		chrome.windows.create({
+					// 			tabId: tab.id,
+					// 			type: 'popup',
+					// 			height: 500, 
+					// 			width: 550,
+					// 			focused: true
+					// 		});
+					// 	});
+					// }
+				}
+			});
+			return false;
+		}
+	} /* end notification */
 
 	// const today = moment().format('DD/MM/YYYY');
 	// if( today == '08/03/2018' ) {

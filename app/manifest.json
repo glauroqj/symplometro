@@ -9,7 +9,7 @@
     "128": "images/symplometro-128.png"
   },
   "background": {
-    "scripts": ["moment.js", "background.js"],
+    "scripts": ["jquery.min.js", "moment.js", "background.js"],
     "persistent": true
   },
   "browser_action": {

@@ -17,7 +17,9 @@
                 <div class="card border-light">
                   <div class="card-body">
                     <h4 class="card-title mb-3">
-                        <span class="badge badge-success animated fadeInDown" v-if="!loading">{{state.events}} teste</span>
+                        <span class="badge badge-success animated fadeInDown" v-if="!loading">
+                            <div>{{state.events}}</div>
+                        </span>
                         <loading :loading="loading" textload="Carregando..."></loading>
                         <span class="pull-right">
                        <!--      <button type="button" class="btn btn-sm btn-outline-primary" v-on:click="getInfo"><i class="fa fa-refresh"></i> 
