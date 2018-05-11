@@ -10,79 +10,77 @@
 
     const popup = {
       mutations: {
-        getInfoMutation(state, payload) {
+        popupGetInfoMutation(state, payload) {
           window.store_popup.state.popup = payload;
-        }
+        },
+        popupLoadingMutation(state, payload) {
+          window.store_popup.state.loading = payload;
+        },
       }, /* mutations */
       actions: {
-        getInfoAction() {
-          /* SHOW loading */
-          let urlCall = 'https://www.sympla.com.br/index.html'
-          $.ajax({
-            url: urlCall,
-            method: 'GET',
-            // contentType: 'application/json',
-            xhrFields: {
-              withCredentials: false
-            },
-            crossDomain: true,
-          })
-          .done(function(data) {
-            let parser = new DOMParser();
-            let domResponse = parser.parseFromString(data, 'text/html')
-            // console.log( $(domResponse).find('h1 span strong').text() );
-            const countEvents = $(domResponse).find('h1 span strong').text();
-            let payload = {
-              events: countEvents
-            };
-            window.store_popup.commit('getInfoMutation', payload);
-          })
-          .fail(function(error) {
-            console.log('Error: ', error)
-          });
+        popupLoadingAction(state, action) {
+          console.log('Init loading', action)
+          if( action == true ) {
+            window.store_popup.commit('popupLoadingMutation', action);
+            return false;
+          }
+          /* removing loading timeout 750ms */
+          setTimeout(()=> {
+            window.store_popup.commit('popupLoadingMutation', action);
+          }, 750);
+        },
+        popupGetInfoAction() {
+          /* verify on local storage */
+          setTimeout(()=> {
+            window.store_popup.dispatch('popupLoadingAction', false);
+          }, 3000)
+          // let urlCall = 'https://www.sympla.com.br/index.html'
+          // $.ajax({
+          //   url: urlCall,
+          //   method: 'GET',
+          //   // contentType: 'application/json',
+          //   xhrFields: {
+          //     withCredentials: false
+          //   },
+          //   crossDomain: true,
+          // })
+          // .done(function(data) {
+          //   let parser = new DOMParser();
+          //   let domResponse = parser.parseFromString(data, 'text/html')
+          //   // console.log( $(domResponse).find('h1 span strong').text() );
+          //   const countEvents = $(domResponse).find('h1 span strong').text();
+          //   let payload = {
+          //     events: countEvents
+          //   };
+          //   window.store_popup.commit('getInfoMutation', payload);
+          // })
+          // .fail(function(error) {
+          //   console.log('Error: ', error)
+          // });
+        },
+      }, /* actions */
+      getters: {
+       popupActualStateGetter() {
+        return window.store_popup.state.popup;
       },
-  			// popupLoadAction() {
-  			// 	let localStorageImages = localStorage.getItem('Images-Gallery');
+      popupActualLoading() {
+        return window.store_popup.state.loading;
+      },
+    }
 
-  			// 	if( localStorageImages == '' || localStorageImages == undefined || localStorageImages == null ) {
-  			// 		let payload = {
-  			// 			countImages: '',
-  			// 			emptyStore: true,
-  			// 			textGallery: 'Empty gallery'
-  			// 		}
-  			// 		window.store_popup.commit('popupLoadMutation', payload);
-  			// 		return false
-  			// 	}
+  };
 
-  			// 	let payload = {
-  			// 		countImages: localStorageImages.split(','),
-  			// 		emptyStore: false,
-  			// 		textGallery: 'Gallery'
-  			// 	}
-  			// 	window.store_popup.commit('popupLoadMutation', payload);
-  			// 	/* call MUTATION to change store state */
-  			// 	// window.store.commit('organizerSetHostIndex', payload);
+  window.store_popup = new Vuex.Store({
+    state: {
+     popup: {},
+     loading: true
+   },
+   modules: {
+     popup: popup
+   }
+ });
 
-  			// }
-  		}, /* actions */
-  		getters: {
-  			popupActualStateGetter() {
-  				return window.store_popup.state.popup;
-  			}
-  		}
-
-  	};
-
-  	window.store_popup = new Vuex.Store({
-  		state: {
-  			popup: {}
-  		},
-  		modules: {
-  			popup: popup
-  		}
-  	});
-
-  })();
+})();
 
 
 
