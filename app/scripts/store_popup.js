@@ -7,31 +7,39 @@
   */
 
   (function() {
- 
+
     const popup = {
       mutations: {
-       popupLoadMutation(state, payload) {
-        window.store_popup.state.popup = payload;
-      },
-      getInfoMutation(state, payload) {
-        window.store_popup.state.popup = payload;
-      }
-    }, /* mutations */
-    actions: {
-      getInfoAction() {
-        /* SHOW loading */
-        let urlCall = "http://anyorigin.com/go?url=" + encodeURIComponent("https://www.globo.com/")+"&callback=?";
-         $.ajax({
-          url: urlCall,
-          method: 'GET',
-        })
-        .done(function(data) {
-          console.log(data)
-        })
-        .fail(function(error) {
-          console.log('Error: ', error)
-        });
-        // window.store_popup.commit('getInfoMutation', payload);
+        getInfoMutation(state, payload) {
+          window.store_popup.state.popup = payload;
+        }
+      }, /* mutations */
+      actions: {
+        getInfoAction() {
+          /* SHOW loading */
+          let urlCall = 'https://www.sympla.com.br/index.html'
+          $.ajax({
+            url: urlCall,
+            method: 'GET',
+            // contentType: 'application/json',
+            xhrFields: {
+              withCredentials: false
+            },
+            crossDomain: true,
+          })
+          .done(function(data) {
+            let parser = new DOMParser();
+            let domResponse = parser.parseFromString(data, 'text/html')
+            // console.log( $(domResponse).find('h1 span strong').text() );
+            const countEvents = $(domResponse).find('h1 span strong').text();
+            let payload = {
+              events: countEvents
+            };
+            window.store_popup.commit('getInfoMutation', payload);
+          })
+          .fail(function(error) {
+            console.log('Error: ', error)
+          });
       },
   			// popupLoadAction() {
   			// 	let localStorageImages = localStorage.getItem('Images-Gallery');
@@ -59,7 +67,7 @@
   		}, /* actions */
   		getters: {
   			popupActualStateGetter() {
-  				return store_popup.state.popup;
+  				return window.store_popup.state.popup;
   			}
   		}
 
@@ -75,3 +83,24 @@
   	});
 
   })();
+
+
+
+//   $.ajax({
+//     url: urlCall,
+//     method: 'GET',
+//     dataType: 'jsonp',
+//     xhrFields: {
+//      withCredentials: false
+//    },
+//    crossDomain: true,
+//    beforeSend: function(xhr) {
+//     xhr.setRequestHeader('Access-Control-Allow-origin', 'true');
+//   },
+// })
+//   .done(function(data) {
+//     console.log(data)
+//   })
+//   .fail(function(error) {
+//     console.log('Error: ', error)
+//   });

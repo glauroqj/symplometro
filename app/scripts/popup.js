@@ -4,7 +4,7 @@
 		name: 'Symplometro',
 		el: '#symplometro',
 		data: {
-			version: '0.0.9',
+			version: '0.0.1',
 		},
 		mounted() {
 
