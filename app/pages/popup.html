@@ -12,21 +12,14 @@
 
 <body>
     <div id="symplometro">
-        <div class="container animated fadeIn">
+        <div class="container">
             <div class="row">
                 <div class="card border-light">
                   <div class="card-body">
-                    <h4 class="card-title mb-3">
-                        <span class="badge badge-success animated fadeInDown" v-if="!loading">
-                            <div>{{state.events}}</div>
-                        </span>
-                        <loading :loading="loading" textload="Carregando..."></loading>
-                        <span class="pull-right">
-                       <!--      <button type="button" class="btn btn-sm btn-outline-primary" v-on:click="getInfo"><i class="fa fa-refresh"></i> 
-                                Reload
-                            </button> -->
-                        </span>
-                    </h4>
+                    <div class="card-title">
+                        <loading :loading="loading" textload="Atualizando..."></loading>
+                        <h4 class="animated fadeIn" v-if="!loading">{{state.events}}</h4>
+                    </div>
                 </div>
             </div>
             <hr class="my-1">
@@ -43,9 +36,9 @@
 </div>
 
 <script type="text/x-template" id="loading">
-    <transition name="fade" enter-active-class="animated fadeIn" leave-active-class="animated fadeOutDown">
+    <transition name="fade" enter-active-class="animated fadeIn" leave-active-class="">
         <div v-show="loading" class="box-loading">
-            <h2>{{textload}}</h2>
+            <h4>{{textload}}</h4>
         </div>
     </transition>
 </script>

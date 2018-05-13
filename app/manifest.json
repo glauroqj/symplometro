@@ -2,7 +2,7 @@
   "content_security_policy": "script-src 'self' https://globo.com/ 'unsafe-eval'; object-src 'self'","name": "Symplometro",
   "short_name": "Symplometro",
   "description": "Easy way to get how many events exist!",
-  "version": "0.0.9",
+  "version": "0.0.2",
   "manifest_version": 2,
   "icons": {
     "16": "images/symplometro-20.png",
@@ -27,8 +27,7 @@
         "/jquery.min.js",
         "/vuex.js",
         "/vue.js",
-        "/moment.js",
-        "/content.js"
+        "/moment.js"
       ],
       "css": [
         "base.css"

@@ -23,7 +23,7 @@ module.exports = merge(common, {
 		{from:'./manifest.json', to:''},
 		{from:'./images', to:'images'},
 		{from:'./vendor', to:''},
-		// {from:'./vendor/vue.js', to:''},
+		{from:'./vendor/vue.js', to:''},
 		// {from:'./vendor/moment.js', to:''},
 		// {from:'./vendor/vuex.js', to:''}
 		])
