@@ -46,7 +46,7 @@
 	function showNotification(data) {
 		let options = {
 			type: 'basic',
-			iconUrl: './images/symplometro-20.png',
+			iconUrl: './images/symplometro-128.png',
 			message: data,
 			title: 'Eventos Online'
 		}
