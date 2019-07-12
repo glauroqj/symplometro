@@ -6,12 +6,16 @@
 
 		if (verifyLocalStorage != '' && verifyLocalStorage != undefined) {
 			getEvents('refresh')
-			return false;
+			return false
 		}
 	}, 2.7e+6) /* 2.7e+6 = 45 minutes */
 
   function getEvents(action) {
     const xhr = new XMLHttpRequest()
+
+    /** verify notification */
+    const notificationPayload = localStorage.getItem('Symplometro-Data')
+    if (notificationPayload === '' && notificationPayload === undefined) localStorage.setItem('Symplometro-Data', JSON.stringify({notification: true}))
 
     xhr.onload = () => {
       // Process our return data
@@ -44,6 +48,13 @@
   }
 
   function showNotification(data) {
+    const notificationPayload = localStorage.getItem('Symplometro-Data')
+
+    if (notificationPayload != '' && notificationPayload != undefined) {
+      const verifyNotification = JSON.parse(notificationPayload).notification
+      if (!verifyNotification) return false
+    }
+
     let options = {
 			type: 'basic',
 			iconUrl: './symplometro-128.png',

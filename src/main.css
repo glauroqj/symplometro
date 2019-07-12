@@ -40,3 +40,21 @@ body {
 .symplometro-footer b {
   font-weight: 600;
 }
+
+.symplometro-notification {
+  color: #fff;
+  text-align: center;
+}
+.symplometro-notification > div:hover {
+  cursor: pointer;
+}
+
+.symplometro-notification .on {
+  background-color: #2ecc71;
+  padding: 3px;
+}
+
+.symplometro-notification .off {
+  background-color: #e74c3c;
+  padding: 3px;
+}
