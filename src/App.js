@@ -16,7 +16,7 @@ const App = () => {
   const toggleNotification = () => {
     const notificationPayload = localStorage.getItem('Symplometro-Data')
 
-    if (notificationPayload != '' && notificationPayload != undefined) {
+    if (notificationPayload !== null) {
       const notificationTest = JSON.parse(notificationPayload).notification
 
       localStorage.setItem('Symplometro-Data', JSON.stringify({notification: notificationTest ? false : true}))
@@ -38,8 +38,8 @@ const App = () => {
       </div>
       <div className="symplometro-notification">
         {state.notification
-          ? <div className="on" onClick={ () => {toggleNotification()} }>Notificações ativadas</div>
-          : <div className="off" onClick={ () => {toggleNotification()} }>Notificações desativadas</div>
+          ? <div className="on" onClick={ () => {toggleNotification()} }>Notificações ON (click para desativar)</div>
+          : <div className="off" onClick={ () => {toggleNotification()} }>Notificações OFF (click para ativar)</div>
         }
       </div>
     </div>

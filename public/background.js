@@ -4,7 +4,7 @@
   setInterval(()=> {
 		let verifyLocalStorage = localStorage.getItem('Count-Event')
 
-		if (verifyLocalStorage != '' && verifyLocalStorage != undefined) {
+		if (verifyLocalStorage !== null) {
 			getEvents('refresh')
 			return false
 		}
@@ -15,7 +15,7 @@
 
     /** verify notification */
     const notificationPayload = localStorage.getItem('Symplometro-Data')
-    if (notificationPayload === '' && notificationPayload === undefined) localStorage.setItem('Symplometro-Data', JSON.stringify({notification: true}))
+    if (notificationPayload === null) localStorage.setItem('Symplometro-Data', JSON.stringify({notification: true}))
 
     xhr.onload = () => {
       // Process our return data
@@ -50,7 +50,8 @@
   function showNotification(data) {
     const notificationPayload = localStorage.getItem('Symplometro-Data')
 
-    if (notificationPayload != '' && notificationPayload != undefined) {
+    if (notificationPayload !== null) {
+      /** verify if notification is allowed */
       const verifyNotification = JSON.parse(notificationPayload).notification
       if (!verifyNotification) return false
     }
