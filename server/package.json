@@ -9,10 +9,5 @@
     "express": "^4.17.1",
     "node-html-parser": "^1.1.16",
     "request": "^2.88.0"
-  },
-  "engines": {
-    "node": "^11.10.0",
-    "npm": "^6.11.0",
-    "yarn": "^1.17.0"
   }
 }

@@ -3,6 +3,11 @@
   "author": "Glauro Quintão Juliani",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "^11.10.0",
+    "npm": "^6.11.0",
+    "yarn": "^1.17.0"
+  },
   "dependencies": {
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
