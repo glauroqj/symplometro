@@ -1,16 +1,18 @@
 {
-  "name": "functions",
-  "description": "Cloud Functions for Firebase",
+  "name": "symplometro-server",
+  "author": "Glauro Quintão Juliani",
+  "heroku-run-build-script": true,
   "scripts": {
-    "serve": "node index.js"
+    "server": "node index.js"
   },
   "dependencies": {
     "express": "^4.17.1",
     "node-html-parser": "^1.1.16",
     "request": "^2.88.0"
   },
-  "devDependencies": {
-    "firebase-functions-test": "^0.1.6"
-  },
-  "private": true
+  "engines": {
+    "node": "^11.10.0",
+    "npm": "^6.2.0",
+    "yarn": "^1.13.0"
+  }
 }

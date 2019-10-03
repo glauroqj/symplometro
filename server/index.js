@@ -34,7 +34,11 @@ app.get('/get-information/:site', function(req, res) {
         '< FINAL DOM > ',
         DOM.querySelectorAll('h1 span strong')[0].innerHTML
       )
-      res.status(200).send(DOM.querySelectorAll('h1 span strong')[0].innerHTML)
+      const payload = {
+        data: DOM.querySelectorAll('h1 span strong')[0].innerHTML
+      }
+
+      res.status(200).send(payload)
       res.end()
     }
   })
