@@ -1,7 +1,6 @@
 {
   "name": "symplometro-server",
   "author": "Glauro Quintão Juliani",
-  "heroku-run-build-script": true,
   "scripts": {
     "server": "node index.js"
   },
