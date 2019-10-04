@@ -5,6 +5,9 @@ const HTMLParser = require('node-html-parser')
 const app = express()
 
 
+app.get('/', function() {
+  res.status(200).send('HEALTH')
+})
 
 app.get('/get-information/:site', function(req, res) {
   
@@ -46,6 +49,6 @@ app.get('/get-information/:site', function(req, res) {
 })
 
 
-app.listen(3000, function() {
-  console.log('< SERVER RUNNING >')
+app.listen(80, '0.0.0.0', () => {
+  console.log('< SERVER STARTED > ')
 })
