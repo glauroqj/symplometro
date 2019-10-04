@@ -32,9 +32,9 @@ const App = () => {
         ? <div className="symplometro-loading">Carregando...</div>
         : <div className="symplometro-events">{state.events}</div>
       }
-      
+
       <div className="symplometro-footer">
-        Feito com amor por <a href="https://www.linkedin.com/in/glauro-juliani/" target="new">Glauro Juliani</a> <b>0.1.1</b>
+        Feito com amor por <a href="https://www.linkedin.com/in/glauro-juliani/" target="new">Glauro Juliani</a> <b>0.1.2</b>
       </div>
       <div className="symplometro-notification">
         {state.notification
