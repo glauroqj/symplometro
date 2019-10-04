@@ -49,6 +49,6 @@ app.get('/get-information/:site', function(req, res) {
 })
 
 
-app.listen(80, '0.0.0.0', () => {
+app.listen(process.env.PORT, '0.0.0.0', function() {
   console.log('< SERVER STARTED > ')
 })
