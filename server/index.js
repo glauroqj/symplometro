@@ -5,8 +5,9 @@ const HTMLParser = require('node-html-parser')
 const app = express()
 
 
-app.get('/', function() {
+app.get('/', function(req, res) {
   res.status(200).send('HEALTH')
+  res.end()
 })
 
 app.get('/get-information/:site', function(req, res) {
