@@ -35,7 +35,7 @@ app.get('/get-information/:site', function(req, res) {
 
   console.log('Visiting page ' + options.url)
 
-  request(options, function(error, response, body) {
+  request(options, (error, response, body) => {
     if (error) {
       console.log('< ERROR > ', error)
       res.status(500).send('Something broke!')
@@ -50,7 +50,7 @@ app.get('/get-information/:site', function(req, res) {
       let oldCount = 0
       db.collection('events').doc('config')
       .get()
-      .then(function(doc) {
+      .then((doc) => {
         console.log('< OLV VALUE COUNT > ', doc.data())
         oldCount = doc.data().count
       })
@@ -74,6 +74,6 @@ app.get('/get-information/:site', function(req, res) {
 })
 
 
-app.listen(process.env.PORT, '0.0.0.0', function() {
+app.listen(process.env.PORT, '0.0.0.0', () => {
   console.log('< SERVER STARTED > ')
 })
