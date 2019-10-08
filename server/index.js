@@ -55,9 +55,11 @@ app.get('/get-information/:site', function(req, res) {
         oldCount = doc.data().count
       })
       
+      const actualValue = Number( DOM.querySelectorAll('h1 span strong')[0].innerHTML.replace(' eventos.','') )
+
       const payload = {
-        count: Number( DOM.querySelectorAll('h1 span strong')[0].innerHTML.replace(' eventos.','') ),
-        topCount: oldCount > payload.count ? oldCount : payload.count
+        count: actualValue,
+        topCount: oldCount > actualValue ? oldCount : actualValue
       }
       
       console.log('< FIRESTORE > ', payload)
