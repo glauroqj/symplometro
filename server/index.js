@@ -46,16 +46,24 @@ app.get('/get-information/:site', function(req, res) {
     if (response.statusCode === 200) {
       console.log('< DONE > ', typeof body)
       const DOM = HTMLParser.parse(body)
+
+      let oldCount = 0
+      db.collection('events').doc('config')
+      .get()
+      .then(function(doc) {
+        console.log('< OLV VALUE COUNT > ', doc.data())
+        oldCount = doc.data().count
+      })
       
       const payload = {
-        data: Number( DOM.querySelectorAll('h1 span strong')[0].innerHTML.replace(' eventos.','') )
+        count: Number( DOM.querySelectorAll('h1 span strong')[0].innerHTML.replace(' eventos.','') ),
+        topCount: oldCount > payload.count ? oldCount : payload.count
       }
       
-      console.log(
-        '< FINAL DOM > ',
-        payload.data
-      )
-      console.log('< FIRESTORE > ',db.collection('events') )
+      console.log('< FIRESTORE > ', payload)
+      
+      db.collection('events').doc('config').set(payload, { merge: true })
+
       res.status(200).send(payload)
       res.end()
     }
