@@ -33,6 +33,9 @@ build/Release
 
 # Dependency directories
 node_modules/
+functions/node_modules/
+functions/yarn-error.log
+
 server/node_modules/
 server/yarn-error.log
 jspm_packages/
