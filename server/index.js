@@ -14,14 +14,17 @@ const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT)
 //   databaseURL: process.env.DATABASE_URL,
 //   projectId: "symplometro"
 // }
-console.log('< SERVICE ACCOUNT > ', serviceAccount)
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
   databaseURL: process.env.DATABASE_URL
 })
 
 /** firestore */
 const db = admin.firestore()
+
+console.log('< DB FIREBASE > ', db)
 
 app.get('/', function(req, res) {
   res.status(200).send('HEALTH')
@@ -59,6 +62,7 @@ app.get('/get-information/:site', function(req, res) {
         console.log('< OLV VALUE COUNT > ', doc.data())
         oldCount = doc.data().count
       })
+      .catch(error => console.warn('< ERROR > ', error))
       
       const actualValue = Number( DOM.querySelectorAll('h1 span strong')[0].innerHTML.replace(' eventos.','') )
 
