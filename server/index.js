@@ -5,6 +5,19 @@ const HTMLParser = require('node-html-parser')
 const app = express()
 
 
+/** admin */
+const admin = require('firebase-admin')
+const credentials = {
+  apiKey: API_KEY,
+  authDomain: AUTH_DOMAIN,
+  databaseURL: DATABASE_URL,
+  projectId: "symplometro"
+}
+admin.initializeApp(credentials)
+
+/** firestore */
+const db = firebase.firestore()
+
 app.get('/', function(req, res) {
   res.status(200).send('HEALTH')
   res.end()
@@ -42,6 +55,7 @@ app.get('/get-information/:site', function(req, res) {
         data: DOM.querySelectorAll('h1 span strong')[0].innerHTML
       }
 
+      console.log('< FIRESTORE > ',db.collection('events') )
       res.status(200).send(payload)
       res.end()
     }
