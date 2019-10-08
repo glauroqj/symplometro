@@ -7,13 +7,18 @@ const app = express()
 
 /** admin */
 const admin = require('firebase-admin')
-const credentials = {
-  apiKey: process.env.API_KEY,
-  authDomain: process.env.AUTH_DOMAIN,
-  databaseURL: process.env.DATABASE_URL,
-  projectId: "symplometro"
-}
-admin.initializeApp(credentials)
+const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT)
+// const credentials = {
+//   apiKey: process.env.API_KEY,
+//   authDomain: process.env.AUTH_DOMAIN,
+//   databaseURL: process.env.DATABASE_URL,
+//   projectId: "symplometro"
+// }
+console.log('< SERVICE ACCOUNT > ', serviceAccount)
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: process.env.DATABASE_URL
+})
 
 /** firestore */
 const db = admin.firestore()
