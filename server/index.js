@@ -47,14 +47,14 @@ app.get('/get-information/:site', function(req, res) {
       console.log('< DONE > ', typeof body)
       const DOM = HTMLParser.parse(body)
       
+      const payload = {
+        data: Number( DOM.querySelectorAll('h1 span strong')[0].innerHTML.replace(' eventos.','') )
+      }
+      
       console.log(
         '< FINAL DOM > ',
-        DOM.querySelectorAll('h1 span strong')[0].innerHTML
+        payload.data
       )
-      const payload = {
-        data: DOM.querySelectorAll('h1 span strong')[0].innerHTML
-      }
-
       console.log('< FIRESTORE > ',db.collection('events') )
       res.status(200).send(payload)
       res.end()
