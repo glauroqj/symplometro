@@ -16,7 +16,7 @@ const credentials = {
 admin.initializeApp(credentials)
 
 /** firestore */
-const db = firebase.firestore()
+const db = admin.firestore()
 
 app.get('/', function(req, res) {
   res.status(200).send('HEALTH')
