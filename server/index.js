@@ -8,9 +8,9 @@ const app = express()
 /** admin */
 const admin = require('firebase-admin')
 const credentials = {
-  apiKey: API_KEY,
-  authDomain: AUTH_DOMAIN,
-  databaseURL: DATABASE_URL,
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  databaseURL: process.env.DATABASE_URL,
   projectId: "symplometro"
 }
 admin.initializeApp(credentials)
