@@ -22,16 +22,16 @@ admin.initializeApp({
 })
 
 /** firestore */
-const db = admin.firestore()
+const db = admin.database()
 
 console.log('< DB FIREBASE > ', db)
 
-app.get('/', function(req, res) {
+app.get('/', (req, res) => {
   res.status(200).send('HEALTH')
   res.end()
 })
 
-app.get('/get-information/:site', function(req, res) {
+app.get('/get-information/:site', (req, res) => {
   
   const options = {
     url: 'https://www.'+req.params.site+'.com.br',
@@ -56,13 +56,16 @@ app.get('/get-information/:site', function(req, res) {
       const DOM = HTMLParser.parse(body)
 
       let oldCount = 0
-      db.collection('events').doc('config')
-      .get()
-      .then((doc) => {
-        console.log('< OLV VALUE COUNT > ', doc.data())
-        oldCount = doc.data().count
+      db.ref('events')
+      .once('value', snapshot => {
+        console.log('< DATABASE : GET > ', snapshot.val() )
       })
       .catch(error => console.warn('< ERROR > ', error))
+
+      // .then((doc) => {
+      //   console.log('< OLD VALUE COUNT > ', doc.data())
+      //   oldCount = doc.data().count
+      // })
       
       const actualValue = Number( DOM.querySelectorAll('h1 span strong')[0].innerHTML.replace(' eventos.','') )
 
@@ -71,7 +74,7 @@ app.get('/get-information/:site', function(req, res) {
         topCount: oldCount > actualValue ? oldCount : actualValue
       }
       
-      console.log('< FIRESTORE > ', payload)
+      console.log('< FIRESTORE : SEND > ', payload)
       
       db.collection('events').doc('config').set(payload, { merge: true })
 
