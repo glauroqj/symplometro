@@ -16,7 +16,7 @@ const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT)
 // }
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: process.env.DATABASE_URL
+  databaseURL: 'https://symplometro.firebaseio.com'
 })
 console.log('< DATABASE URL > ', process.env.DATABASE_URL)
 /** firestore */
@@ -39,29 +39,23 @@ app.get('/get-information/:site', (req, res) => {
 
   console.log('Visiting page ' + options.url)
 
-  request(options, (error, response, body) => {
+  request(options, async (error, response, body) => {
     if (error) {
       console.log('< ERROR > ', error)
       res.status(500).send('Something broke!')
     }
   
-    console.log('Status code: ' + response.statusCode)
+    console.log('< STATUS CODE > ' + response.statusCode)
   
     if (response.statusCode === 200) {
-      console.log('< DONE > ', typeof body)
+      console.log('< BODY > ', typeof body)
       const DOM = HTMLParser.parse(body)
 
       let oldCount = 0
-      db.ref('/events')
+      await db.ref('/events')
       .once('value', snapshot => {
         console.log('< DATABASE : GET > ', snapshot.val() )
       })
-      .catch(error => console.warn('< ERROR > ', error))
-
-      // .then((doc) => {
-      //   console.log('< OLD VALUE COUNT > ', doc.data())
-      //   oldCount = doc.data().count
-      // })
       
       const actualValue = Number( DOM.querySelectorAll('h1 span strong')[0].innerHTML.replace(' eventos.','') )
 
