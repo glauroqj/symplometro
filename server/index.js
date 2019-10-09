@@ -6,15 +6,17 @@ const app = express()
 
 /** admin */
 const admin = require('firebase-admin')
-const serviceAccount = require('./base.json')
-// JSON.parse(process.env.SERVICE_ACCOUNT)
+const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT)
+
 // const credentials = {
 //   apiKey: process.env.API_KEY,
 //   authDomain: process.env.AUTH_DOMAIN,
 //   databaseURL: process.env.DATABASE_URL,
 //   projectId: "symplometro"
 // }
+
 app.use((req, res, next) => {
+  console.log('< ADMIN INITIALIZE >')
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: 'https://symplometro.firebaseio.com'
@@ -22,6 +24,7 @@ app.use((req, res, next) => {
   console.log('< DATABASE URL > ', process.env.DATABASE_URL)
   /** firestore */
   const db = admin.database()
+
   db.ref('/events')
   .once('value', snapshot => {
     console.log('< DATABASE : GET > ', snapshot.val() )
@@ -69,7 +72,7 @@ app.get('/get-information/:site', (req, res) => {
       
       // console.log('< FIRESTORE : SEND > ', payload)
 
-      res.status(200).send(payload)
+      res.status(200).send('SENDED')
       res.end()
     }
   })
@@ -77,6 +80,6 @@ app.get('/get-information/:site', (req, res) => {
 })
 
 
-app.listen(process.env.PORT, '0.0.0.0', () => {
+app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
   console.log('< SERVER STARTED > ')
 })
