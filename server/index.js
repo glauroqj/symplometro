@@ -54,7 +54,7 @@ app.get('/get-information/:site', (req, res) => {
       const DOM = HTMLParser.parse(body)
 
       let oldCount = 0
-      db.ref('events')
+      db.ref('/events')
       .once('value', snapshot => {
         console.log('< DATABASE : GET > ', snapshot.val() )
       })
