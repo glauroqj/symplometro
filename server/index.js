@@ -18,19 +18,23 @@ admin.initializeApp({
 })
 
 app.use((req, res, next) => {
-  console.log('< DATABASE URL > ', process.env.DATABASE_URL)
-  /** firestore */
+  /** firebase database  */
   const db = admin.database()
   res.adminDatabase = db
 
   db.ref('/events')
-  .once('value', snapshot => {
+  .once('value')
+  .then(snapshot => {
     console.log('< DATABASE : GET > ', snapshot.val() )
 
     res.payloadDatabase = snapshot.val()
-
     next()
   })
+  .catch(error => {
+    console.warn('< DATABASE : GET : ERROR > ', error )
+    res.status(500).end()
+  })
+
 })
 
 app.get('/', (req, res) => {
