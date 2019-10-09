@@ -4,13 +4,45 @@ const HTMLParser = require('node-html-parser')
 
 const app = express()
 
+const environment = process.env.NODE_ENV || 'development'
+console.log('< ENV > ', environment)
 
-app.get('/', function(req, res) {
+/** admin */
+const admin = require('firebase-admin')
+const serviceAccount = environment === 'development' ? require('./localAUTH.json') : JSON.parse(process.env.SERVICE_ACCOUNT)
+
+console.log('< ADMIN INITIALIZE > ')
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://symplometro.firebaseio.com'
+})
+
+app.use((req, res, next) => {
+  /** firebase database  */
+  const db = admin.database()
+  res.adminDatabase = db
+
+  db.ref('/events')
+  .once('value')
+  .then(snapshot => {
+    console.log('< DATABASE : GET > ', snapshot.val() )
+
+    res.payloadDatabase = snapshot.val()
+    next()
+  })
+  .catch(error => {
+    console.warn('< DATABASE : GET : ERROR > ', error )
+    res.status(500).end()
+  })
+
+})
+
+app.get('/', (req, res) => {
   res.status(200).send('HEALTH')
   res.end()
 })
 
-app.get('/get-information/:site', function(req, res) {
+app.get('/get-information/:site', (req, res) => {
   
   const options = {
     url: 'https://www.'+req.params.site+'.com.br',
@@ -22,34 +54,49 @@ app.get('/get-information/:site', function(req, res) {
 
   console.log('Visiting page ' + options.url)
 
-  request(options, function(error, response, body) {
+  request(options, async (error, response, body) => {
     if (error) {
       console.log('< ERROR > ', error)
       res.status(500).send('Something broke!')
     }
   
-    console.log('Status code: ' + response.statusCode)
+    console.log('< STATUS CODE > ' + response.statusCode)
   
     if (response.statusCode === 200) {
-      console.log('< DONE > ', typeof body)
+      console.log('< BODY > ', typeof body)
       const DOM = HTMLParser.parse(body)
       
-      console.log(
-        '< FINAL DOM > ',
-        DOM.querySelectorAll('h1 span strong')[0].innerHTML
-      )
-      const payload = {
-        data: DOM.querySelectorAll('h1 span strong')[0].innerHTML
-      }
+      const actualValue = Number( DOM.querySelectorAll('h1 span strong')[0].innerHTML.replace(' eventos.','') )
 
-      res.status(200).send(payload)
-      res.end()
+      const payload = {
+        count: String(actualValue),
+        topCount: Number(res.payloadDatabase.topCount) > Number(actualValue) ? String(res.payloadDatabase.topCount) : String(actualValue)
+      }
+      
+      console.log('< FIRESTORE : SEND > ', payload)
+
+      res.adminDatabase.ref('/events/')
+      .update(payload, (error) => {
+        if (error) {
+          console.warn('< ERROR TO SAVE IN DATABASE >')
+          res.status(500).send('ERROR TO SAVE IN DATABASE')
+          res.end()
+        }
+        if (!error) {
+          res.status(200).send('UPDATE DONE')
+          res.end()
+        }
+      })
     }
   })
 
 })
 
 
-app.listen(process.env.PORT, '0.0.0.0', function() {
+app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
   console.log('< SERVER STARTED > ')
 })
+
+/*
+  DOC: https://firebase.google.com/docs/database/web/read-and-write
+*/

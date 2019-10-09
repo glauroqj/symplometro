@@ -2,7 +2,7 @@
   "name": "symplometro-server",
   "author": "Glauro Quintão Juliani",
   "scripts": {
-    "server": "node index.js"
+    "server": "babel-node index.js"
   },
   "private": true,
   "engines": {
@@ -11,7 +11,11 @@
     "yarn": "^1.17.0"
   },
   "dependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/node": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
     "express": "^4.17.1",
+    "firebase-admin": "^8.6.0",
     "node-html-parser": "^1.1.16",
     "request": "^2.88.0"
   }

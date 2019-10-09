@@ -33,9 +33,13 @@ build/Release
 
 # Dependency directories
 node_modules/
+
 server/node_modules/
 server/yarn-error.log
+server/localAUTH.json
 jspm_packages/
+
+src/credentials.js
 
 # Typescript v1 declaration files
 typings/

@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react'
+/** firebase */
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 
 const App = () => {
-
+  const db = firebase.firestore()
+  
   const [state, setState] = useState({ loading: true, events: 0, notification: null })
 
   useEffect(() => {
