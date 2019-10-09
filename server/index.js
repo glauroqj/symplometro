@@ -24,8 +24,6 @@ admin.initializeApp({
 /** firestore */
 const db = admin.database()
 
-console.log('< DB FIREBASE > ', db)
-
 app.get('/', (req, res) => {
   res.status(200).send('HEALTH')
   res.end()
@@ -75,8 +73,6 @@ app.get('/get-information/:site', (req, res) => {
       }
       
       console.log('< FIRESTORE : SEND > ', payload)
-      
-      db.collection('events').doc('config').set(payload, { merge: true })
 
       res.status(200).send(payload)
       res.end()
