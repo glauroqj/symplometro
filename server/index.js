@@ -4,23 +4,20 @@ const HTMLParser = require('node-html-parser')
 
 const app = express()
 
+const environment = process.env.NODE_ENV || 'development'
+console.log('< ENV > ', environment)
+
 /** admin */
 const admin = require('firebase-admin')
-const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT)
+const serviceAccount = environment === 'development' ? require('./localAUTH.json') : JSON.parse(process.env.SERVICE_ACCOUNT)
 
-// const credentials = {
-//   apiKey: process.env.API_KEY,
-//   authDomain: process.env.AUTH_DOMAIN,
-//   databaseURL: process.env.DATABASE_URL,
-//   projectId: "symplometro"
-// }
+console.log('< ADMIN INITIALIZE > ')
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://symplometro.firebaseio.com'
+})
 
 app.use((req, res, next) => {
-  console.log('< ADMIN INITIALIZE >')
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://symplometro.firebaseio.com'
-  })
   console.log('< DATABASE URL > ', process.env.DATABASE_URL)
   /** firestore */
   const db = admin.database()
@@ -28,6 +25,9 @@ app.use((req, res, next) => {
   db.ref('/events')
   .once('value', snapshot => {
     console.log('< DATABASE : GET > ', snapshot.val() )
+
+    res.payloadDatabase = snapshot.val()
+
     next()
   })
 })
@@ -60,19 +60,17 @@ app.get('/get-information/:site', (req, res) => {
     if (response.statusCode === 200) {
       console.log('< BODY > ', typeof body)
       const DOM = HTMLParser.parse(body)
-
-      let oldCount = 0
       
-      // const actualValue = Number( DOM.querySelectorAll('h1 span strong')[0].innerHTML.replace(' eventos.','') )
+      const actualValue = Number( DOM.querySelectorAll('h1 span strong')[0].innerHTML.replace(' eventos.','') )
 
-      // const payload = {
-      //   count: actualValue,
-      //   topCount: oldCount > actualValue ? oldCount : actualValue
-      // }
+      const payload = {
+        count: String(actualValue),
+        topCount: Number(res.payloadDatabase.topCount) > Number(actualValue) ? String(res.payloadDatabase.topCount) : String(actualValue)
+      }
       
-      // console.log('< FIRESTORE : SEND > ', payload)
+      console.log('< FIRESTORE : SEND > ', payload)
 
-      res.status(200).send('SENDED')
+      res.status(200).send(payload)
       res.end()
     }
   })
