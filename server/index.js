@@ -16,11 +16,9 @@ const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT)
 // }
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  apiKey: process.env.API_KEY,
-  authDomain: process.env.AUTH_DOMAIN,
   databaseURL: process.env.DATABASE_URL
 })
-
+console.log('< DATABASE URL > ', process.env.DATABASE_URL)
 /** firestore */
 const db = admin.database()
 
