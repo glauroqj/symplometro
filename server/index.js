@@ -21,6 +21,7 @@ app.use((req, res, next) => {
   console.log('< DATABASE URL > ', process.env.DATABASE_URL)
   /** firestore */
   const db = admin.database()
+  res.adminDatabase = db
 
   db.ref('/events')
   .once('value', snapshot => {
@@ -70,8 +71,18 @@ app.get('/get-information/:site', (req, res) => {
       
       console.log('< FIRESTORE : SEND > ', payload)
 
-      res.status(200).send(payload)
-      res.end()
+      res.adminDatabase.ref('/events/')
+      .update(payload, (error) => {
+        if (error) {
+          console.warn('< ERROR TO SAVE IN DATABASE >')
+          res.status(500).send('ERROR TO SAVE IN DATABASE')
+          res.end()
+        }
+        if (!error) {
+          res.status(200).send('UPDATE DONE')
+          res.end()
+        }
+      })
     }
   })
 
@@ -81,3 +92,7 @@ app.get('/get-information/:site', (req, res) => {
 app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
   console.log('< SERVER STARTED > ')
 })
+
+/*
+  DOC: https://firebase.google.com/docs/database/web/read-and-write
+*/
