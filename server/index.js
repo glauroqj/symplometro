@@ -19,21 +19,21 @@ admin.initializeApp({
 
 app.use((req, res, next) => {
   /** firebase database  */
-  const db = admin.database()
+  const db = admin.firestore()
   res.adminDatabase = db
 
-  db.ref('/events')
-  .once('value')
-  .then(snapshot => {
-    console.log('< DATABASE : GET > ', snapshot.val() )
-
-    res.payloadDatabase = snapshot.val()
-    next()
-  })
-  .catch(error => {
-    console.warn('< DATABASE : GET : ERROR > ', error )
-    res.status(500).end()
-  })
+  db.collection('events')
+    .doc('config')
+    .get()
+    .then(doc => {
+      console.log('< FIRESTORE : GET DATA > ', doc.data())
+      res.payloadDatabase =  doc.data()
+      next()
+    })
+    .catch(error => {
+      console.warn('< DATABASE : GET : ERROR > ', error )
+      res.status(500).end()
+    })
 
 })
 
@@ -75,18 +75,20 @@ app.get('/get-information/:site', (req, res) => {
       
       console.log('< FIRESTORE : SEND > ', payload)
 
-      res.adminDatabase.ref('/events/')
-      .update(payload, (error) => {
-        if (error) {
+      res.adminDatabase
+        .collection('events')
+        .doc('config')
+        .update(payload)
+        .then(() => {
+          res.status(200).send('< UPDATE DONE >')
+          res.end()
+        })
+        .catch(() => {
           console.warn('< ERROR TO SAVE IN DATABASE >')
           res.status(500).send('ERROR TO SAVE IN DATABASE')
           res.end()
-        }
-        if (!error) {
-          res.status(200).send('UPDATE DONE')
-          res.end()
-        }
-      })
+        })
+
     }
   })
 
