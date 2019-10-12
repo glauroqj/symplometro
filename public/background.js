@@ -11,17 +11,7 @@
   firebase.initializeApp(credentials)
   const db = firebase.firestore()
 
-  db.collection('events')
-    .doc('config')
-    .get()
-    .then(doc => {
-      console.log('< FIRESTORE : GET DATA > ', doc.data())
-    })
-    .catch(error => {
-      console.warn('< DATABASE : GET : ERROR > ', error )
-    })
-
-  getEvents('init')
+  checkUser()
 
   setInterval(()=> {
 		let verifyLocalStorage = localStorage.getItem('Count-Event')
@@ -30,14 +20,65 @@
 			getEvents('refresh')
 			return false
 		}
-	}, 2.7e+6) /* 2.7e+6 = 45 minutes */
+  }, 2.7e+6) /* 2.7e+6 = 45 minutes */
+  
+  function checkUser() {
+    /** check user */
+    let symplometroUser = localStorage.getItem('symplometro-user')
+
+    if (symplometroUser !== null) {
+      /** user exist, get configs from database and call getEvents */
+      // const user = JSON.parse(symplometroUser)
+      // db.collection('users')
+      //   .doc(user.id)
+      //   .get()
+      //   .then(doc => {
+
+      //   })
+      //   .catch(error => {
+
+      //   })
+      getEvents('init')
+
+    } else {
+      /** create user, set into database */
+      const payload = {
+        userAgent: navigator.userAgent,
+        notifications: true,
+        timeToNotification: 2.7e+6,
+        accountCreated: new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+      }
+      
+      /** save in database */
+      db.collection('users')
+      .add(payload)
+      .then(ref => {
+        payload.id = ref.id
+        console.log('< USER SAVED IN DATABASE > ', payload)
+        localStorage.setItem('symplometro-user', JSON.stringify(payload))
+      })
+      .catch(error => console.warn('< ERROR SAVE USER IN DATABASE > ', error))
+    }
+  }
 
   function getEvents(action) {
-    const xhr = new XMLHttpRequest()
 
-    /** verify notification */
-    const notificationPayload = localStorage.getItem('Symplometro-Data')
-    if (notificationPayload === null) localStorage.setItem('Symplometro-Data', JSON.stringify({notification: true}))
+    /** get events from database */
+    db.collection('events')
+    .doc('config')
+    .get()
+    .then(doc => {
+      console.log('< FIRESTORE : GET DATA > ', doc.data())
+      const eventsPayload = doc.data()
+      /** verify notification */
+      const notificationPayload = localStorage.getItem('Symplometro-Data')
+      if (notificationPayload === null) localStorage.setItem('Symplometro-Data', JSON.stringify({notification: true}))
+    
+    })
+    .catch(error => {
+      console.warn('< DATABASE : GET : ERROR > ', error )
+    })
+
 
     // xhr.onload = () => {
     //   // Process our return data

@@ -3,8 +3,6 @@ import React, { useState, useEffect } from 'react'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 
-// const id = btoa(new Date)
-
 const App = () => {
   const db = firebase.firestore()
   
