@@ -16,6 +16,7 @@
   function checkUser() {
     /** check user */
     let symplometroUser = localStorage.getItem('symplometro-user')
+    let payload = null
 
     if (symplometroUser !== null) {
       /** user exist, get configs from database and call getEvents */
@@ -29,17 +30,18 @@
       //   .catch(error => {
 
       //   })
+      window.timeToNotification = 300000
       getEvents('init')
 
     } else {
       /** create user, set into database */
-      const payload = {
+      payload = {
         userAgent: navigator.userAgent,
         notifications: true,
-        timeToNotification: 60000, /** TODO:change to => 2.7e+6 */
+        timeToNotification: 300000, /** TODO:change to => 2.7e+6 */
         accountCreated: new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
       }
-      /** set timer as global variable */
+
       window.timeToNotification = payload.timeToNotification
 
       /** save in database */

@@ -9,23 +9,52 @@ const App = () => {
   const [state, setState] = useState({ loading: true, events: 0, notification: null })
 
   useEffect(() => {
-    const data = localStorage.getItem('Count-Event')
-    const notificationData = localStorage.getItem('Symplometro-Data')
 
-    if (data) setState({ ...state, loading: false, events: data, notification: JSON.parse(notificationData) ? JSON.parse(notificationData).notification : false })
+    // db.collection('events')
+    // .doc('config')
+    // .get()
+    // .then(doc => {
+    //   console.log('< FIRESTORE : GET DATA > ', doc.data())
 
-    if (!data) setState({ ...state, loading: false, events: 'Aguardando atualização...', notification: JSON.parse(notificationData) ? JSON.parse(notificationData).notification : false })
+    //   setState({
+    //     ...state,
+    //     loading: false,
+    //     events: doc.data().count
+    //   })
+
+    // })
+    // .catch(error => {
+    //   console.warn('< DATABASE : GET : ERROR > ', error )
+    // })
+
+    // db.collection('users')
+    // .doc('config')
+    // .get()
+    // .then(doc => {
+    //   console.log('< FIRESTORE : GET DATA > ', doc.data())
+
+    //   setState({
+    //     ...state,
+    //     loading: false,
+    //     events: doc.data().count
+    //   })
+
+    // })
+    // .catch(error => {
+    //   console.warn('< DATABASE : GET : ERROR > ', error )
+    // })
+
   }, [])
 
   const toggleNotification = () => {
-    const notificationPayload = localStorage.getItem('Symplometro-Data')
+    // const notificationPayload = localStorage.getItem('Symplometro-Data')
 
-    if (notificationPayload !== null) {
-      const notificationTest = JSON.parse(notificationPayload).notification
+    // if (notificationPayload !== null) {
+    //   const notificationTest = JSON.parse(notificationPayload).notification
 
-      localStorage.setItem('Symplometro-Data', JSON.stringify({notification: notificationTest ? false : true}))
-      setState({...state, notification: notificationTest ? false : true})
-    }
+    //   localStorage.setItem('Symplometro-Data', JSON.stringify({notification: notificationTest ? false : true}))
+    //   setState({...state, notification: notificationTest ? false : true})
+    // }
 
   }
 
