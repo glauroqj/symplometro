@@ -12,15 +12,6 @@
   const db = firebase.firestore()
 
   checkUser()
-
-  setInterval(()=> {
-		let verifyLocalStorage = localStorage.getItem('Count-Event')
-
-		if (verifyLocalStorage !== null) {
-			getEvents('refresh')
-			return false
-		}
-  }, 2.7e+6) /* 2.7e+6 = 45 minutes */
   
   function checkUser() {
     /** check user */
@@ -45,10 +36,12 @@
       const payload = {
         userAgent: navigator.userAgent,
         notifications: true,
-        timeToNotification: 2.7e+6,
+        timeToNotification: 60000, /** TODO:change to => 2.7e+6 */
         accountCreated: new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
       }
-      
+      /** set timer as global variable */
+      window.timeToNotification = payload.timeToNotification
+
       /** save in database */
       db.collection('users')
       .add(payload)
@@ -56,9 +49,20 @@
         payload.id = ref.id
         console.log('< USER SAVED IN DATABASE > ', payload)
         localStorage.setItem('symplometro-user', JSON.stringify(payload))
+        getEvents('init')
       })
-      .catch(error => console.warn('< ERROR SAVE USER IN DATABASE > ', error))
+      .catch(error => {
+        console.warn('< ERROR SAVE USER IN DATABASE > ', error)
+        getEvents('init')
+      })
     }
+
+    /** start interval */
+    setInterval(()=> {
+      console.log('< SET INTERVAL : TIMER > ', window.timeToNotification)
+      getEvents('refresh')
+    }, window.timeToNotification || 2.7e+6) /* 2.7e+6 = 45 minutes */
+
   }
 
   function getEvents(action) {
@@ -71,62 +75,32 @@
       console.log('< FIRESTORE : GET DATA > ', doc.data())
       const eventsPayload = doc.data()
       /** verify notification */
-      const notificationPayload = localStorage.getItem('Symplometro-Data')
-      if (notificationPayload === null) localStorage.setItem('Symplometro-Data', JSON.stringify({notification: true}))
-    
+      const userConfigs = localStorage.getItem('symplometro-user')
+      /** if doesnt exist user, check/create one */
+      if (userConfigs === null) checkUser()
+
+      if (userConfigs) {
+        const userPreferences = JSON.parse(userConfigs) 
+        /** check actions and user preferences */
+        if (action === 'refresh' && userPreferences.notifications) showNotification(eventsPayload.count)
+      }
     })
     .catch(error => {
       console.warn('< DATABASE : GET : ERROR > ', error )
     })
-
-
-    // xhr.onload = () => {
-    //   // Process our return data
-    //   if (xhr.status >= 200 && xhr.status < 300) {
-    //     // What do when the request is successful
-    //     // console.log('success!', xhr)
-    //     const parser = new DOMParser()
-    //     const domResponse = parser.parseFromString(xhr.responseText, 'text/html')
-    //     // console.log('DOM RESPONSE: >>>> ', domResponse)
-    //     const countEvents = domResponse.querySelectorAll('h1 span strong')[0].innerText
-    //     // console.log('Events >>>>>>>> ', countEvents)
-    //     localStorage.setItem('Count-Event', countEvents)
-
-    //     const onlyNumbers = countEvents.split(' ')[0].split('.')[0]
-
-    //     chrome.browserAction.setBadgeText({text: `${onlyNumbers}K`})
-
-    //     if (action === 'refresh') {
-    //       showNotification(countEvents)
-    //     }
-
-    //   } else {
-    //     // What do when the request fails
-    //     console.log('The request failed!')
-    //   }
-    // }
-    
-    // xhr.open('GET', 'https://www.sympla.com.br/index.html')
-    // xhr.send()
   }
 
   function showNotification(data) {
-    const notificationPayload = localStorage.getItem('Symplometro-Data')
-
-    if (notificationPayload !== null) {
-      /** verify if notification is allowed */
-      const verifyNotification = JSON.parse(notificationPayload).notification
-      if (!verifyNotification) return false
-    }
-
     let options = {
-			type: 'basic',
-			iconUrl: './symplometro-128.png',
-			message: data,
+      type: 'basic',
+      iconUrl: './symplometro-128.png',
+      message: data,
       title: 'Eventos Online',
       eventTime: 3000
     }
-    
+      
+    console.log('< SHOW NOTIFICATION > ', options)
+
     if (Notification.permission === 'granted') {
 			// let notification = new Notification('', options);
 			chrome.notifications.create('', options)
