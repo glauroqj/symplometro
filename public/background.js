@@ -53,7 +53,7 @@
         getEvents('init')
       })
       .catch(error => {
-        // console.warn('< ERROR SAVE USER IN DATABASE > ', error)
+        console.warn('< ERROR SAVE USER IN DATABASE > ', error)
         getEvents('init')
       })
     }
