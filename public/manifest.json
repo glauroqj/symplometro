@@ -23,13 +23,8 @@
     "default_popup": "index.html"
   },
   "permissions": [
-    "activeTab",
-    "tabs",
     "storage",
-    "sessions",
     "notifications",
-    "background",
-    "http://*/*",
-    "https://*/*"
+    "background"
   ]
 }
