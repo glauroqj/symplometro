@@ -30,7 +30,6 @@
       //   .catch(error => {
 
       //   })
-      window.timeToNotification = 300000
       getEvents('init')
 
     } else {
@@ -38,53 +37,58 @@
       payload = {
         userAgent: navigator.userAgent,
         notifications: true,
-        timeToNotification: 300000, /** TODO:change to => 2.7e+6 */
+        timeToNotification: 2.7e+6, /** TODO:change to => 2.7e+6 */
         accountCreated: new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
       }
-
-      window.timeToNotification = payload.timeToNotification
 
       /** save in database */
       db.collection('users')
       .add(payload)
       .then(ref => {
         payload.id = ref.id
-        console.log('< USER SAVED IN DATABASE > ', payload)
+        // console.log('< USER SAVED IN DATABASE > ', payload)
         localStorage.setItem('symplometro-user', JSON.stringify(payload))
+        /** expose user id in window */
+        window.userID = ref.id
         getEvents('init')
       })
       .catch(error => {
-        console.warn('< ERROR SAVE USER IN DATABASE > ', error)
+        // console.warn('< ERROR SAVE USER IN DATABASE > ', error)
         getEvents('init')
       })
     }
 
     /** start interval */
     setInterval(()=> {
-      console.log('< SET INTERVAL : TIMER > ', window.timeToNotification)
+      // console.log('< SET INTERVAL : TIMER > ', window.timeToNotification)
       getEvents('refresh')
-    }, window.timeToNotification || 2.7e+6) /* 2.7e+6 = 45 minutes */
+    }, 2.7e+6) /* 2.7e+6 = 45 minutes */
 
   }
 
   function getEvents(action) {
+
+    const notificationPayload = localStorage.getItem('symplometro-data')
+    if (notificationPayload === null) localStorage.setItem('symplometro-data', JSON.stringify({notification: true}))
 
     /** get events from database */
     db.collection('events')
     .doc('config')
     .get()
     .then(doc => {
-      console.log('< FIRESTORE : GET DATA > ', doc.data())
+      // console.log('< FIRESTORE : GET DATA > ', doc.data())
       const eventsPayload = doc.data()
+      /** show badge */
+      const onlyNumbers = doc.data().count.split(' ')[0].split('.')[0]
+      chrome.browserAction.setBadgeText({text: `${onlyNumbers}K`})
       /** verify notification */
       const userConfigs = localStorage.getItem('symplometro-user')
       /** if doesnt exist user, check/create one */
       if (userConfigs === null) checkUser()
 
       if (userConfigs) {
-        const userPreferences = JSON.parse(userConfigs) 
         /** check actions and user preferences */
-        if (action === 'refresh' && userPreferences.notifications) showNotification(eventsPayload.count)
+        if (action === 'refresh') showNotification(eventsPayload.count)
       }
     })
     .catch(error => {
@@ -93,6 +97,13 @@
   }
 
   function showNotification(data) {
+    const notificationPayload = localStorage.getItem('symplometro-data')
+
+    if (notificationPayload !== null) {
+      const notification = JSON.parse(notificationPayload).notification
+      if (!notification) return false
+    }
+
     let options = {
       type: 'basic',
       iconUrl: './symplometro-128.png',
@@ -101,7 +112,7 @@
       eventTime: 3000
     }
       
-    console.log('< SHOW NOTIFICATION > ', options)
+    // console.log('< SHOW NOTIFICATION > ', options)
 
     if (Notification.permission === 'granted') {
 			// let notification = new Notification('', options);
@@ -118,5 +129,8 @@
 			return false
 		}
   }
+
+  /** listener, send user id to application */
+
 
 })()

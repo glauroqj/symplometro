@@ -9,55 +9,69 @@ body {
   .symplometro-app {
     min-width: 300px;
   
-    .symplometro-loading {
+    & .loading {
+      height: 40px;
       padding: 10px;
       font-size: 1.6em;
-      text-align: center;
-    }
-    
-    .symplometro-events {
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 10px;
-      font-size: 1.6em;
-      text-align: center;
     }
+
+    & .box-events {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 10px;
+      height: 40px;
+      
+      & .actual-events {
+        font-size: 1.6em;
+      }
+  
+      & .top-events {
+        font-size: 1em;
+        color: #b2bec3;
+        font-style: italic;
+        font-weight: 300;
+      }
+    }
+
     
-    .symplometro-footer {
+    .footer {
       text-align: center;
       background-color: #ecf0f1;
       color: #323232;
       padding: 5px;
       font-size: 1.2em;
+
+      a {
+        text-decoration: none;
+        color: #0a6ebd;
+        font-weight: 600;
+      }
+      b {
+        font-weight: 600;
+      }
     }
     
-    .symplometro-footer a {
-      text-decoration: none;
-      color: #0a6ebd;
-      font-weight: 600;
-    }
-    
-    .symplometro-footer b {
-      font-weight: 600;
-    }
-    
-    .symplometro-notification {
+    .notification {
       color: #fff;
       text-align: center;
-    }
-    .symplometro-notification > div:hover {
-      cursor: pointer;
-    }
-    
-    .symplometro-notification .on {
-      background-color: #2ecc71;
-      padding: 3px;
-    }
-    
-    .symplometro-notification .off {
-      background-color: #e74c3c;
-      padding: 3px;
+
+      > div:hover {
+        cursor: pointer;
+      }
+
+      & .on {
+        background-color: #2ecc71;
+        padding: 3px;
+      }
+      & .off {
+        background-color: #e74c3c;
+        padding: 3px;
+      }
     }
   }/*symplometro-app*/
 }/*body*/
