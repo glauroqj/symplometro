@@ -5,42 +5,73 @@ import 'firebase/firestore'
 
 const App = () => {
   const db = firebase.firestore()
+  const notificationData = localStorage.getItem('symplometro-data')
   
-  const [state, setState] = useState({ loading: true, events: 0, notification: null })
+  const [state, setState] = useState({
+    loading: true,
+    events: null,
+    notification: JSON.parse(notificationData) ? JSON.parse(notificationData).notification : false
+  })
 
   useEffect(() => {
-    const data = localStorage.getItem('Count-Event')
-    const notificationData = localStorage.getItem('Symplometro-Data')
 
-    if (data) setState({ ...state, loading: false, events: data, notification: JSON.parse(notificationData) ? JSON.parse(notificationData).notification : false })
+    db.collection('events')
+    .doc('config')
+    .get()
+    .then(doc => {
+      // console.log('< FIRESTORE : GET DATA > ', doc.data(), process.env)
 
-    if (!data) setState({ ...state, loading: false, events: 'Aguardando atualização...', notification: JSON.parse(notificationData) ? JSON.parse(notificationData).notification : false })
+      setState({
+        ...state,
+        loading: false,
+        events: doc.data()
+      })
+
+    })
+    .catch(error => {
+      console.warn('< DATABASE : GET : ERROR > ', error )
+      setState({
+        ...state,
+        loading: false,
+        events: {count: 'Aguardando atualização...'}
+      })
+    })
+
+
   }, [])
 
   const toggleNotification = () => {
-    const notificationPayload = localStorage.getItem('Symplometro-Data')
+    const notificationPayload = localStorage.getItem('symplometro-data')
 
     if (notificationPayload !== null) {
       const notificationTest = JSON.parse(notificationPayload).notification
 
-      localStorage.setItem('Symplometro-Data', JSON.stringify({notification: notificationTest ? false : true}))
+      localStorage.setItem('symplometro-data', JSON.stringify({notification: notificationTest ? false : true}))
       setState({...state, notification: notificationTest ? false : true})
     }
 
   }
 
+  const eventsTemplate = () => (
+    <div className="box-events">
+      <div className="actual-events">{`${state.events.count} eventos`}</div>
+      <div className="top-events">{`Recorde: ${state.events.topCount} eventos`}</div>
+    </div>
+  )
+
   return (
     <div className="symplometro-app">
 
       {state.loading
-        ? <div className="symplometro-loading">Carregando...</div>
-        : <div className="symplometro-events">{state.events}</div>
+        ? <div className="loading">Carregando...</div>
+        : eventsTemplate()
       }
 
-      <div className="symplometro-footer">
-        Feito com amor por <a href="https://www.linkedin.com/in/glauro-juliani/" target="new">Glauro Juliani</a> <b>0.1.2</b>
+      <div className="footer">
+        Feito com amor por <a href="https://www.linkedin.com/in/glauro-juliani/" target="new">Glauro Juliani</a> <b>0.2.0</b>
       </div>
-      <div className="symplometro-notification">
+      
+      <div className="notification">
         {state.notification
           ? <div className="on" onClick={ () => {toggleNotification()} }>Notificações ON (click para desativar)</div>
           : <div className="off" onClick={ () => {toggleNotification()} }>Notificações OFF (click para ativar)</div>

@@ -19,7 +19,7 @@
     "heroku-prebuild": "cd server && yarn install",
     "heroku-postbuild": "cd server",
     "dev": "react-scripts start",
-    "final-build": "INLINE_RUNTIME_CHUNK=false react-scripts build"
+    "build": "INLINE_RUNTIME_CHUNK=false react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -35,5 +35,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "node-sass": "^4.12.0"
   }
 }

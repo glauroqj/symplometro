@@ -1,69 +1,119 @@
 (function() {
-  getEvents('init')
+  const credentials = {
+    apiKey: "AIzaSyAOq1-ibTMS4HChhuxpCeCwUFFQai16I1c",
+    authDomain: "symplometro.firebaseapp.com",
+    databaseURL: "https://symplometro.firebaseio.com",
+    projectId: "symplometro",
+    storageBucket: "symplometro.appspot.com",
+    messagingSenderId: "106786872116",
+    appId: "1:106786872116:web:9c7693352d516bb425e361"
+  }
+  firebase.initializeApp(credentials)
+  const db = firebase.firestore()
 
-  setInterval(()=> {
-		let verifyLocalStorage = localStorage.getItem('Count-Event')
+  checkUser()
+  
+  function checkUser() {
+    /** check user */
+    let symplometroUser = localStorage.getItem('symplometro-user')
+    let payload = null
 
-		if (verifyLocalStorage !== null) {
-			getEvents('refresh')
-			return false
-		}
-	}, 2.7e+6) /* 2.7e+6 = 45 minutes */
+    if (symplometroUser !== null) {
+      /** user exist, get configs from database and call getEvents */
+      // const user = JSON.parse(symplometroUser)
+      // db.collection('users')
+      //   .doc(user.id)
+      //   .get()
+      //   .then(doc => {
+
+      //   })
+      //   .catch(error => {
+
+      //   })
+      getEvents('init')
+
+    } else {
+      /** create user, set into database */
+      payload = {
+        userAgent: navigator.userAgent,
+        notifications: true,
+        timeToNotification: 2.7e+6, /** TODO:change to => 2.7e+6 */
+        accountCreated: new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+      }
+
+      /** save in database */
+      db.collection('users')
+      .add(payload)
+      .then(ref => {
+        payload.id = ref.id
+        // console.log('< USER SAVED IN DATABASE > ', payload)
+        localStorage.setItem('symplometro-user', JSON.stringify(payload))
+        /** expose user id in window */
+        window.userID = ref.id
+        getEvents('init')
+      })
+      .catch(error => {
+        console.warn('< ERROR SAVE USER IN DATABASE > ', error)
+        getEvents('init')
+      })
+    }
+
+    /** start interval */
+    setInterval(()=> {
+      // console.log('< SET INTERVAL : TIMER > ', window.timeToNotification)
+      getEvents('refresh')
+    }, 2.7e+6) /* 2.7e+6 = 45 minutes */
+
+  }
 
   function getEvents(action) {
-    const xhr = new XMLHttpRequest()
 
-    /** verify notification */
-    const notificationPayload = localStorage.getItem('Symplometro-Data')
-    if (notificationPayload === null) localStorage.setItem('Symplometro-Data', JSON.stringify({notification: true}))
+    const notificationPayload = localStorage.getItem('symplometro-data')
+    if (notificationPayload === null) localStorage.setItem('symplometro-data', JSON.stringify({notification: true}))
 
-    xhr.onload = () => {
-      // Process our return data
-      if (xhr.status >= 200 && xhr.status < 300) {
-        // What do when the request is successful
-        // console.log('success!', xhr)
-        const parser = new DOMParser()
-        const domResponse = parser.parseFromString(xhr.responseText, 'text/html')
-        // console.log('DOM RESPONSE: >>>> ', domResponse)
-        const countEvents = domResponse.querySelectorAll('h1 span strong')[0].innerText
-        // console.log('Events >>>>>>>> ', countEvents)
-        localStorage.setItem('Count-Event', countEvents)
+    /** get events from database */
+    db.collection('events')
+    .doc('config')
+    .get()
+    .then(doc => {
+      // console.log('< FIRESTORE : GET DATA > ', doc.data())
+      const eventsPayload = doc.data()
+      /** show badge */
+      const onlyNumbers = doc.data().count.split(' ')[0].split('.')[0]
+      chrome.browserAction.setBadgeText({text: `${onlyNumbers}K`})
+      /** verify notification */
+      const userConfigs = localStorage.getItem('symplometro-user')
+      /** if doesnt exist user, check/create one */
+      if (userConfigs === null) checkUser()
 
-        const onlyNumbers = countEvents.split(' ')[0].split('.')[0]
-
-        chrome.browserAction.setBadgeText({text: `${onlyNumbers}K`})
-
-        if (action === 'refresh') {
-          showNotification(countEvents)
-        }
-
-      } else {
-        // What do when the request fails
-        console.log('The request failed!')
+      if (userConfigs) {
+        /** check actions and user preferences */
+        if (action === 'refresh') showNotification(eventsPayload.count)
       }
-    }
-    
-    xhr.open('GET', 'https://www.sympla.com.br/index.html')
-    xhr.send()
+    })
+    .catch(error => {
+      console.warn('< DATABASE : GET : ERROR > ', error )
+    })
   }
 
   function showNotification(data) {
-    const notificationPayload = localStorage.getItem('Symplometro-Data')
+    const notificationPayload = localStorage.getItem('symplometro-data')
 
     if (notificationPayload !== null) {
-      /** verify if notification is allowed */
-      const verifyNotification = JSON.parse(notificationPayload).notification
-      if (!verifyNotification) return false
+      const notification = JSON.parse(notificationPayload).notification
+      if (!notification) return false
     }
 
     let options = {
-			type: 'basic',
-			iconUrl: './symplometro-128.png',
-			message: data,
+      type: 'basic',
+      iconUrl: './symplometro-128.png',
+      message: data,
       title: 'Eventos Online',
       eventTime: 3000
     }
-    
+      
+    // console.log('< SHOW NOTIFICATION > ', options)
+
     if (Notification.permission === 'granted') {
 			// let notification = new Notification('', options);
 			chrome.notifications.create('', options)
@@ -79,5 +129,8 @@
 			return false
 		}
   }
+
+  /** listener, send user id to application */
+
 
 })()

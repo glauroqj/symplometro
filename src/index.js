@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 /** style */
-import './main.css'
+import './main.scss'
 /** firebase */
 import firebase from 'firebase/app'
 import {credentials} from './credentials'
