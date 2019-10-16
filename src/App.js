@@ -28,8 +28,8 @@ const App = () => {
       })
 
     })
-    .catch(error => {
-      console.warn('< DATABASE : GET : ERROR > ', error )
+    .catch(() => {
+      // console.warn('< DATABASE : GET : ERROR > ', error )
       setState({
         ...state,
         loading: false,
