@@ -60,7 +60,7 @@
     setInterval(function() {
       // console.log('< SET INTERVAL : TIMER > ')
       getEvents('refresh')
-    }, 2700000) /* 2.7e+6 = 45 minutes */
+    }, 2700000) /* 2700000 = 45 minutes */
 
   }
 
