@@ -28,8 +28,8 @@ const App = () => {
       })
 
     })
-    .catch(error => {
-      console.warn('< DATABASE : GET : ERROR > ', error )
+    .catch(() => {
+      // console.warn('< DATABASE : GET : ERROR > ', error )
       setState({
         ...state,
         loading: false,
@@ -68,7 +68,7 @@ const App = () => {
       }
 
       <div className="footer">
-        Feito com amor por <a href="https://www.linkedin.com/in/glauro-juliani/" target="new">Glauro Juliani</a> <b>0.2.0</b>
+        Feito com amor por <a href="https://www.linkedin.com/in/glauro-juliani/" target="new">Glauro Juliani</a> <b>0.2.1</b>
       </div>
       
       <div className="notification">
