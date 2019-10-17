@@ -66,11 +66,11 @@ app.get('/get-information/:site', (req, res) => {
       console.log('< BODY > ', typeof body)
       const DOM = HTMLParser.parse(body)
       
-      const actualValue = Number( DOM.querySelectorAll('h1 span strong')[0].innerHTML.replace(' eventos.','') )
+      const actualValue = DOM.querySelectorAll('h1 span strong')[0].innerHTML.replace(' eventos.','')
 
       const payload = {
         count: String(actualValue),
-        topCount: Number(res.payloadDatabase.topCount) > Number(actualValue) ? String(res.payloadDatabase.topCount) : String(actualValue)
+        topCount: String(res.payloadDatabase.topCount) > String(actualValue) ? String(res.payloadDatabase.topCount) : String(actualValue)
       }
       
       console.log('< FIRESTORE : SEND > ', payload)

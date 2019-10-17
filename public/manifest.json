@@ -2,7 +2,7 @@
   "name": "Symplometro",
   "short_name": "Symplometro",
   "description": "Contador de eventos. Apenas para symplers! =]",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "manifest_version": 2,
   "author": "Glauro Quintão Juliani",
   "content_security_policy":"script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
@@ -12,7 +12,7 @@
   },
   "background": {
     "page": "bg.html",
-    "persistent": false
+    "persistent": true
   },
   "browser_action": {
     "default_icon": {

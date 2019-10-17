@@ -10,57 +10,57 @@
   }
   firebase.initializeApp(credentials)
   const db = firebase.firestore()
+
+  /** start interval */
+  setInterval(function() {
+    // console.log('< SET INTERVAL : TIMER > ')
+    getEvents('refresh')
+  }, 2700000) /* 2700000 = 45 minutes */
   
   function checkUser() {
     /** check user */
     let symplometroUser = localStorage.getItem('symplometro-user')
-    let payload = null
+    const payload = {
+      version: '0.2.2',
+      userAgent: navigator.userAgent,
+      notifications: true,
+      timeToNotification: 2.7e+6, /** TODO:change to => 2.7e+6 */
+      accountCreated: new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+    }
 
     if (symplometroUser !== null) {
       /** user exist, get configs from database and call getEvents */
-      // const user = JSON.parse(symplometroUser)
-      // db.collection('users')
-      //   .doc(user.id)
-      //   .get()
-      //   .then(doc => {
-
-      //   })
-      //   .catch(error => {
-
-      //   })
-      getEvents('init')
-
+      const user = JSON.parse(symplometroUser)
+      db.collection('users')
+        .doc(user.id)
+        .set(payload, {merge:true})
+        .then(() => {
+          payload.id = user.id
+          localStorage.setItem('symplometro-user', JSON.stringify(payload))
+          getEvents('init')
+        })
+        .catch(error => {
+          console.warn('< ERROR UPDATE USER IN DATABASE > ', error)
+          getEvents('init')
+        })
     } else {
       /** create user, set into database */
-      payload = {
-        userAgent: navigator.userAgent,
-        notifications: true,
-        timeToNotification: 2.7e+6, /** TODO:change to => 2.7e+6 */
-        accountCreated: new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-      }
-
       /** save in database */
       db.collection('users')
-      .add(payload)
-      .then(function(ref) {
-        payload.id = ref.id
-        // console.log('< USER SAVED IN DATABASE > ', payload)
-        localStorage.setItem('symplometro-user', JSON.stringify(payload))
-        /** expose user id in window */
-        window.userID = ref.id
-        getEvents('init')
-      })
-      .catch(function(error) {
-        console.warn('< ERROR SAVE USER IN DATABASE > ', error)
-        getEvents('init')
-      })
+        .add(payload)
+        .then(function(ref) {
+          payload.id = ref.id
+          // console.log('< USER SAVED IN DATABASE > ', payload)
+          localStorage.setItem('symplometro-user', JSON.stringify(payload))
+          /** expose user id in window */
+          window.userID = ref.id
+          getEvents('init')
+        })
+        .catch(function(error) {
+          console.warn('< ERROR SAVE USER IN DATABASE > ', error)
+          getEvents('init')
+        })
     }
-
-    /** start interval */
-    setInterval(function() {
-      // console.log('< SET INTERVAL : TIMER > ')
-      getEvents('refresh')
-    }, 2700000) /* 2700000 = 45 minutes */
 
   }
 
