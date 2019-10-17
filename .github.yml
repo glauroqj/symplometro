@@ -1,0 +1,18 @@
+on: push
+name: Codechek
+branches:
+  - master
+  - code-check
+jobs:
+  codechecks:
+    name: run codechecks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: yarn
+        run: |
+          yarn install --frozen-lockfile
+          npx codechecks
+          yarn check
+        env:
+          CC_SECRET: ${{ secrets.CC_SECRET }}
