@@ -3,6 +3,8 @@ name: Codechek
 branches:
   - master
   - code-check
+secrets:
+  - name: CC_SECRET
 jobs:
   codechecks:
     name: run codechecks
@@ -12,7 +14,7 @@ jobs:
       - name: yarn
         run: |
           yarn install --frozen-lockfile
+          
           npx codechecks
-          yarn check
         env:
           CC_SECRET: ${{ secrets.CC_SECRET }}
