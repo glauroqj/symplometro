@@ -66,8 +66,9 @@ dist
 .next
 .DS_Store
 out
-build
 symplometro.zip
-
+build/*.js
+build/*.json
+build/*.html
 #except
 !build/static

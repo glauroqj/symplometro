@@ -6,3 +6,4 @@ checks:
         - path: "./build/static/js/*.js"
           maxSize: 1MB
         - path: "./build/static/css/*.css"
+        - path: "./build/*.png"

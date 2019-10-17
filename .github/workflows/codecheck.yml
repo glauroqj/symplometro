@@ -14,6 +14,6 @@ jobs:
         run: |
           yarn install --frozen-lockfile
           npx codechecks
-          yarn codechecks
+          yarn build
         env:
           CC_SECRET: ${{ secrets.CC_SECRET }}
