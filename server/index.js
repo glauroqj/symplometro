@@ -67,6 +67,8 @@ app.get('/get-information/:site', (req, res) => {
       const DOM = HTMLParser.parse(body)
       
       const actualValue = DOM.querySelectorAll('h1 span strong')[0].innerHTML.replace(' eventos.','')
+      
+      console.log(`< ACTUAL VALUE > ${actualValue} - < TOP VALUE > ${res.payloadDatabase.topCount}`)
 
       const payload = {
         count: String(actualValue),
