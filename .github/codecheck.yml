@@ -1,5 +1,5 @@
-on: push
 name: Codechek
+on: push
 branches:
   - master
   - code-check
