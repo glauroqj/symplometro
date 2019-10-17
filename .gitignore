@@ -68,3 +68,6 @@ dist
 out
 build
 symplometro.zip
+
+#except
+!build/static
