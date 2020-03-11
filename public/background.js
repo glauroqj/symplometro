@@ -17,11 +17,26 @@
     getEvents('refresh')
   }, 2700000) /* 2700000 = 45 minutes */
   
+
+  function logIn() {
+    return new Promise(resolve => {
+
+      firebase.auth().signInAnonymously()
+      .then(() => {
+        console.log('< LOG IN : DONE > ')
+        checkUser()
+        resolve(true)
+      })
+      .catch(error => console.log('< LOG IN : ERROR > ', error), getEvents('init'), resolve(false))
+            
+    })
+  }
+
   function checkUser() {
     /** check user */
     let symplometroUser = localStorage.getItem('symplometro-user')
     const payload = {
-      version: '0.2.2',
+      version: '0.2.3',
       userAgent: navigator.userAgent,
       notifications: true,
       timeToNotification: 2.7e+6, /** TODO:change to => 2.7e+6 */
@@ -48,7 +63,7 @@
       /** save in database */
       db.collection('users')
         .add(payload)
-        .then(function(ref) {
+        .then(ref => {
           payload.id = ref.id
           // console.log('< USER SAVED IN DATABASE > ', payload)
           localStorage.setItem('symplometro-user', JSON.stringify(payload))
@@ -56,7 +71,7 @@
           window.userID = ref.id
           getEvents('init')
         })
-        .catch(function(error) {
+        .catch(error => {
           console.warn('< ERROR SAVE USER IN DATABASE > ', error)
           getEvents('init')
         })
@@ -73,7 +88,7 @@
     db.collection('events')
     .doc('config')
     .get()
-    .then(function(doc) {
+    .then(doc => {
       // console.log('< FIRESTORE : GET DATA > ', doc.data())
       const eventsPayload = doc.data()
       /** show badge */
@@ -82,14 +97,14 @@
       /** verify notification */
       const userConfigs = localStorage.getItem('symplometro-user')
       /** if doesnt exist user, check/create one */
-      if (userConfigs === null) checkUser()
+      if (userConfigs === null) logIn()
 
       if (userConfigs) {
         /** check actions and user preferences */
         if (action === 'refresh') showNotification(eventsPayload.count)
       }
     })
-    .catch(function(error) {
+    .catch(error => {
       console.warn('< DATABASE : GET : ERROR > ', error )
     })
   }
@@ -129,6 +144,6 @@
   }
 
   /** init */
-  checkUser()
+  logIn()
 
 })()

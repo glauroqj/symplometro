@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 /** firebase */
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+import 'firebase/auth'
 
 const App = () => {
   const db = firebase.firestore()
@@ -14,7 +15,21 @@ const App = () => {
   })
 
   useEffect(() => {
+    /** logIn */
+    signInAnonymous()
+  }, [])
 
+  const signInAnonymous = () => {
+
+    firebase.auth().signInAnonymously()
+      .then(() => {
+        // console.log('< LOG IN : DONE > ', response)
+        getData()
+      })
+      .catch(error => console.log('< LOG IN : ERROR > ', error))
+  }
+
+  const getData = () => {
     db.collection('events')
     .doc('config')
     .get()
@@ -36,9 +51,7 @@ const App = () => {
         events: {count: 'Aguardando atualização...'}
       })
     })
-
-
-  }, [])
+  }
 
   const toggleNotification = () => {
     const notificationPayload = localStorage.getItem('symplometro-data')
@@ -68,7 +81,7 @@ const App = () => {
       }
 
       <div className="footer">
-        Feito com amor por <a href="https://www.linkedin.com/in/glauro-juliani/" target="new">Glauro Juliani</a> <b>0.2.2</b>
+        Feito com amor por <a href="https://www.linkedin.com/in/glauro-juliani/" target="new">Glauro Juliani</a> <b>0.2.3</b>
       </div>
       
       <div className="notification">
