@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "^11.10.0",
+    "node": "^13",
     "npm": "^6.11.0",
     "yarn": "^1.17.0"
   },

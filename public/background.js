@@ -15,7 +15,7 @@
   setInterval(function() {
     // console.log('< SET INTERVAL : TIMER > ')
     getEvents('refresh')
-  }, 2700000) /* 2700000 = 45 minutes */
+  }, 10000) /* 2700000 = 45 minutes */
   
 
   function logIn() {
@@ -121,7 +121,7 @@
       type: 'basic',
       iconUrl: './symplometro-128.png',
       message: data,
-      title: 'Eventos Online',
+      title: 'O show vai continuar time =]', /** Eventos Online */
       eventTime: 3000
     }
       

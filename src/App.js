@@ -67,6 +67,7 @@ const App = () => {
 
   const eventsTemplate = () => (
     <div className="box-events">
+      <div className="cute-text">O show vai continuar time \o/</div>
       <div className="actual-events">{`${state.events.count} eventos`}</div>
       <div className="top-events">{`Recorde: ${state.events.topCount} eventos`}</div>
     </div>
@@ -81,7 +82,7 @@ const App = () => {
       }
 
       <div className="footer">
-        Feito com amor por <a href="https://www.linkedin.com/in/glauro-juliani/" target="new">Glauro Juliani</a> <b>0.2.3</b>
+        Feito com amor por <a href="https://www.linkedin.com/in/glauro-juliani/" target="new">Glauro Juliani</a> <b>0.2.4</b>
       </div>
       
       <div className="notification">
