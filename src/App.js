@@ -1,56 +1,88 @@
 import React, { useState, useEffect } from 'react'
 /** firebase */
-import firebase from 'firebase/app'
-import 'firebase/firestore'
-import 'firebase/auth'
+// import firebase from 'firebase/app'
+// import 'firebase/firestore'
+// import 'firebase/auth'
+
+const packageValues = require('../package.json')
 
 const App = () => {
-  const db = firebase.firestore()
+  // const db = firebase.firestore()
   const notificationData = localStorage.getItem('symplometro-data')
-  
+
   const [state, setState] = useState({
     loading: true,
     events: null,
-    notification: JSON.parse(notificationData) ? JSON.parse(notificationData).notification : false
+    notification: JSON.parse(notificationData)
+      ? JSON.parse(notificationData).notification
+      : false
   })
 
   useEffect(() => {
     /** logIn */
-    signInAnonymous()
+    // signInAnonymous();
+    fetchSympla()
   }, [])
 
-  const signInAnonymous = () => {
+  const fetchSympla = async () => {
+    try {
+      const responseRaw = await fetch('https://www.sympla.com.br')
 
-    firebase.auth().signInAnonymously()
-      .then(() => {
-        // console.log('< LOG IN : DONE > ', response)
-        getData()
-      })
-      .catch(error => console.log('< LOG IN : ERROR > ', error))
+      if (!responseRaw.ok) {
+        throw new Error('Failed to fetch HTML')
+      }
+      const html = await responseRaw.text()
+      const parser = new DOMParser()
+
+      const doc = parser.parseFromString(html, 'text/html')
+
+      const value = doc.querySelector(
+        '#navbar > div > span > span > strong'
+      ).textContent
+
+      console.log('< responseRaw > ', value)
+      if (!!value) {
+        setState({
+          events: value,
+          loading: false
+        })
+      }
+    } catch (e) {
+      console.log('< FETCH SYMPLA ERROR > ', e)
+    }
+  }
+
+  const signInAnonymous = () => {
+    // firebase
+    //   .auth()
+    //   .signInAnonymously()
+    //   .then(() => {
+    //     // console.log('< LOG IN : DONE > ', response)
+    //     getData()
+    //   })
+    //   .catch((error) => console.log('< LOG IN : ERROR > ', error))
   }
 
   const getData = () => {
-    db.collection('events')
-    .doc('config')
-    .get()
-    .then(doc => {
-      // console.log('< FIRESTORE : GET DATA > ', doc.data(), process.env)
-
-      setState({
-        ...state,
-        loading: false,
-        events: doc.data()
-      })
-
-    })
-    .catch(() => {
-      // console.warn('< DATABASE : GET : ERROR > ', error )
-      setState({
-        ...state,
-        loading: false,
-        events: {count: 'Aguardando atualização...'}
-      })
-    })
+    // db.collection('events')
+    //   .doc('config')
+    //   .get()
+    //   .then((doc) => {
+    //     // console.log('< FIRESTORE : GET DATA > ', doc.data(), process.env)
+    //     setState({
+    //       ...state,
+    //       loading: false,
+    //       events: doc.data()
+    //     })
+    //   })
+    //   .catch(() => {
+    //     // console.warn('< DATABASE : GET : ERROR > ', error )
+    //     setState({
+    //       ...state,
+    //       loading: false,
+    //       events: { count: 'Aguardando atualização...' }
+    //     })
+    //   })
   }
 
   const toggleNotification = () => {
@@ -59,38 +91,60 @@ const App = () => {
     if (notificationPayload !== null) {
       const notificationTest = JSON.parse(notificationPayload).notification
 
-      localStorage.setItem('symplometro-data', JSON.stringify({notification: notificationTest ? false : true}))
-      setState({...state, notification: notificationTest ? false : true})
+      localStorage.setItem(
+        'symplometro-data',
+        JSON.stringify({ notification: notificationTest ? false : true })
+      )
+      setState({ ...state, notification: notificationTest ? false : true })
     }
-
   }
 
   const eventsTemplate = () => (
     <div className="box-events">
       <div className="cute-text">O show vai continuar time \o/</div>
-      <div className="actual-events">{`${state.events.count} eventos`}</div>
-      <div className="top-events">{`Recorde: ${state.events.topCount} eventos`}</div>
+      <div className="actual-events">{`${state.events} eventos`}</div>
+      {/* <div className="top-events">{`Recorde: ${state.events.topCount} eventos`}</div> */}
     </div>
   )
 
   return (
     <div className="symplometro-app">
-
-      {state.loading
-        ? <div className="loading">Carregando...</div>
-        : eventsTemplate()
-      }
+      {state.loading ? (
+        <div className="loading">Carregando...</div>
+      ) : (
+        eventsTemplate()
+      )}
 
       <div className="footer">
-        Feito com amor por <a href="https://www.linkedin.com/in/glauro-juliani/" target="new">Glauro Juliani</a> <b>0.2.4</b>
+        Feito com amor por{' '}
+        <a href="https://www.linkedin.com/in/glauro-juliani/" target="new">
+          Glauro Juliani
+        </a>
+        {' - '}
+        <b>{packageValues?.version}</b>
       </div>
-      
-      <div className="notification">
-        {state.notification
-          ? <div className="on" onClick={ () => {toggleNotification()} }>Notificações ON (click para desativar)</div>
-          : <div className="off" onClick={ () => {toggleNotification()} }>Notificações OFF (click para ativar)</div>
-        }
-      </div>
+
+      {/* <div className="notification">
+        {state.notification ? (
+          <div
+            className="on"
+            onClick={() => {
+              toggleNotification()
+            }}
+          >
+            Notificações ON (click para desativar)
+          </div>
+        ) : (
+          <div
+            className="off"
+            onClick={() => {
+              toggleNotification()
+            }}
+          >
+            Notificações OFF (click para ativar)
+          </div>
+        )}
+      </div> */}
     </div>
   )
 }

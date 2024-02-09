@@ -1,19 +1,8 @@
 {
   "name": "symplometro",
   "author": "Glauro Quintão Juliani",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "private": true,
-  "engines": {
-    "node": "^13",
-    "npm": "^6.11.0",
-    "yarn": "^1.17.0"
-  },
-  "dependencies": {
-    "firebase": "^7.10.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
-  },
   "heroku-run-build-script": true,
   "scripts": {
     "heroku-prebuild": "cd server && yarn install",
@@ -37,9 +26,22 @@
       "last 1 safari version"
     ]
   },
+  "dependencies": {
+    "@types/node": "^20.11.17",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "autoprefixer": "^10.4.17",
+    "firebase": "^7.10.0",
+    "postcss": "^8.4.35",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.3.3"
+  },
   "devDependencies": {
     "@codechecks/build-size-watcher": "^0.1.0",
     "@codechecks/client": "^0.1.10",
-    "node-sass": "4.13.1"
+    "prettier": "^3.2.5"
   }
 }

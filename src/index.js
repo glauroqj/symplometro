@@ -1,15 +1,15 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 /** style */
-import './main.scss'
+import './main.css'
 /** core */
 import App from './App'
 /** firebase */
-import firebase from 'firebase/app'
-import {credentials} from './credentials'
+// import firebase from "firebase/app";
+// import { credentials } from "./credentials";
 
 console.log('< ENV > ', process.env.NODE_ENV)
 
-firebase.initializeApp(credentials)
+// firebase.initializeApp(credentials)
 
 ReactDOM.render(<App />, document.getElementById('root'))
