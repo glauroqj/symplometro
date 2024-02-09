@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/glauroqj/symplometro/compare/v1.0.0...v1.0.1) (2024-02-09)
+
+
+### Bug Fixes
+
+* version ([e9bac8b](https://github.com/glauroqj/symplometro/commit/e9bac8bfe23873cc366c3be36b64098ce895c0eb))
+
 # 1.0.0 (2024-02-09)
 
 
