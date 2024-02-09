@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Symplometro",
+  "short_name": "Symplometro",
+  "description": "Contador de eventos. Apenas para symplers! =]",
+  "version": "2.0.0",
+  "author": "Glauro Quintão Juliani",
+  "icons": {
+    "16": "symplometro-20.png",
+    "32": "symplometro-20.png",
+    "48": "symplometro-20.png",
+    "128": "symplometro-128.png"
+  },
+  "action": {
+    "default_icon": {
+      "19": "symplometro-20.png",
+      "38": "symplometro-20.png"
+    },
+    "default_title": "Symplometro",
+    "default_popup": "index.html"
+  },
+  "permissions": ["storage", "notifications", "background"],
+  "host_permissions": [
+    "https://www.gstatic.com/",
+    "https://*.firebaseio.com/",
+    "https://www.googleapis.com/"
+  ]
+}
