@@ -52,52 +52,52 @@ const App = () => {
     }
   }
 
-  const signInAnonymous = () => {
-    // firebase
-    //   .auth()
-    //   .signInAnonymously()
-    //   .then(() => {
-    //     // console.log('< LOG IN : DONE > ', response)
-    //     getData()
-    //   })
-    //   .catch((error) => console.log('< LOG IN : ERROR > ', error))
-  }
+  // const signInAnonymous = () => {
+  //   // firebase
+  //   //   .auth()
+  //   //   .signInAnonymously()
+  //   //   .then(() => {
+  //   //     // console.log('< LOG IN : DONE > ', response)
+  //   //     getData()
+  //   //   })
+  //   //   .catch((error) => console.log('< LOG IN : ERROR > ', error))
+  // }
 
-  const getData = () => {
-    // db.collection('events')
-    //   .doc('config')
-    //   .get()
-    //   .then((doc) => {
-    //     // console.log('< FIRESTORE : GET DATA > ', doc.data(), process.env)
-    //     setState({
-    //       ...state,
-    //       loading: false,
-    //       events: doc.data()
-    //     })
-    //   })
-    //   .catch(() => {
-    //     // console.warn('< DATABASE : GET : ERROR > ', error )
-    //     setState({
-    //       ...state,
-    //       loading: false,
-    //       events: { count: 'Aguardando atualização...' }
-    //     })
-    //   })
-  }
+  // const getData = () => {
+  //   // db.collection('events')
+  //   //   .doc('config')
+  //   //   .get()
+  //   //   .then((doc) => {
+  //   //     // console.log('< FIRESTORE : GET DATA > ', doc.data(), process.env)
+  //   //     setState({
+  //   //       ...state,
+  //   //       loading: false,
+  //   //       events: doc.data()
+  //   //     })
+  //   //   })
+  //   //   .catch(() => {
+  //   //     // console.warn('< DATABASE : GET : ERROR > ', error )
+  //   //     setState({
+  //   //       ...state,
+  //   //       loading: false,
+  //   //       events: { count: 'Aguardando atualização...' }
+  //   //     })
+  //   //   })
+  // }
 
-  const toggleNotification = () => {
-    const notificationPayload = localStorage.getItem('symplometro-data')
+  // const toggleNotification = () => {
+  //   const notificationPayload = localStorage.getItem('symplometro-data')
 
-    if (notificationPayload !== null) {
-      const notificationTest = JSON.parse(notificationPayload).notification
+  //   if (notificationPayload !== null) {
+  //     const notificationTest = JSON.parse(notificationPayload).notification
 
-      localStorage.setItem(
-        'symplometro-data',
-        JSON.stringify({ notification: notificationTest ? false : true })
-      )
-      setState({ ...state, notification: notificationTest ? false : true })
-    }
-  }
+  //     localStorage.setItem(
+  //       'symplometro-data',
+  //       JSON.stringify({ notification: notificationTest ? false : true })
+  //     )
+  //     setState({ ...state, notification: notificationTest ? false : true })
+  //   }
+  // }
 
   const eventsTemplate = () => (
     <div className="box-events">
