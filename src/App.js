@@ -21,36 +21,74 @@ const App = () => {
   useEffect(() => {
     /** logIn */
     // signInAnonymous();
-    fetchSympla()
+    // fetchSympla()
+    serviceWorkerListener()
   }, [])
 
-  const fetchSympla = async () => {
-    try {
-      const responseRaw = await fetch('https://www.sympla.com.br')
-
-      if (!responseRaw.ok) {
-        throw new Error('Failed to fetch HTML')
-      }
-      const html = await responseRaw.text()
-      const parser = new DOMParser()
-
-      const doc = parser.parseFromString(html, 'text/html')
-
-      const value = doc.querySelector(
-        '#navbar > div > span > span > strong'
-      ).textContent
-
-      console.log('< responseRaw > ', value)
-      if (!!value) {
-        setState({
-          events: value,
-          loading: false
-        })
-      }
-    } catch (e) {
-      console.log('< FETCH SYMPLA ERROR > ', e)
+  const serviceWorkerListener = () => {
+    // eslint-disable-next-line
+    console.log(chrome)
+    // eslint-disable-next-line
+    if (!!chrome && chrome?.runtime) {
+      console.log('< SEND MESSAGE APP >')
+      // eslint-disable-next-line
+      chrome.runtime.sendMessage(
+        {
+          type: 'callSite',
+          url: 'https://www.sympla.com.br'
+        },
+        (response) => {
+          // console.log('< RESPONSE HTML >', response)
+          handleHtmlResponse(response)
+        }
+      )
     }
   }
+
+  const handleHtmlResponse = (html) => {
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(html, 'text/html')
+
+    const value = doc.querySelector(
+      '#navbar > div > span > span > strong'
+    ).textContent
+
+    console.log('< responseRaw > ', value)
+    if (!!value) {
+      setState({
+        events: value,
+        loading: false
+      })
+    }
+  }
+
+  // const fetchSympla = async () => {
+  //   try {
+  //     const responseRaw = await fetch('https://www.sympla.com.br')
+
+  //     if (!responseRaw.ok) {
+  //       throw new Error('Failed to fetch HTML')
+  //     }
+  //     const html = await responseRaw.text()
+  // const parser = new DOMParser()
+
+  // const doc = parser.parseFromString(html, 'text/html')
+
+  // const value = doc.querySelector(
+  //   '#navbar > div > span > span > strong'
+  // ).textContent
+
+  // console.log('< responseRaw > ', value)
+  // if (!!value) {
+  //   setState({
+  //     events: value,
+  //     loading: false
+  //   })
+  // }
+  //   } catch (e) {
+  //     console.log('< FETCH SYMPLA ERROR > ', e)
+  //   }
+  // }
 
   // const signInAnonymous = () => {
   //   // firebase
