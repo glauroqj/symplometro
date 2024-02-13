@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/glauroqj/symplometro/compare/v1.1.0...v1.2.0) (2024-02-13)
+
+
+### Features
+
+* make fetch request on bg ([337a120](https://github.com/glauroqj/symplometro/commit/337a120719ed7df231d29ec6dc208c9f9ba4cd63))
+
 # [1.1.0](https://github.com/glauroqj/symplometro/compare/v1.0.1...v1.1.0) (2024-02-13)
 
 
