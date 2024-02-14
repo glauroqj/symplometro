@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/glauroqj/symplometro/compare/v1.2.0...v1.3.0) (2024-02-14)
+
+
+### Features
+
+* make fetch requests on bg in intervals ([381521a](https://github.com/glauroqj/symplometro/commit/381521a432189c8fe2a49bdd08509ba90d881d24))
+
 # [1.2.0](https://github.com/glauroqj/symplometro/compare/v1.1.0...v1.2.0) (2024-02-13)
 
 
