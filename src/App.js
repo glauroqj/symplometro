@@ -22,15 +22,13 @@ const App = () => {
     /** logIn */
     // signInAnonymous();
     // fetchSympla()
-    serviceWorkerListener()
+    callApiBackground()
   }, [])
 
-  const serviceWorkerListener = () => {
-    // eslint-disable-next-line
-    console.log(chrome)
+  const callApiBackground = () => {
     // eslint-disable-next-line
     if (!!chrome && chrome?.runtime) {
-      console.log('< SEND MESSAGE APP >')
+      // console.log('< SEND MESSAGE APP >')
       // eslint-disable-next-line
       chrome.runtime.sendMessage(
         {
@@ -45,20 +43,24 @@ const App = () => {
     }
   }
 
-  const handleHtmlResponse = (html) => {
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(html, 'text/html')
+  const handleHtmlResponse = (value) => {
+    // const parser = new DOMParser()
+    // const doc = parser.parseFromString(html, 'text/html')
 
-    const value = doc.querySelector(
-      '#navbar > div > span > span > strong'
-    ).textContent
+    // const value = doc.querySelector(
+    //   '#navbar > div > span > span > strong'
+    // ).textContent
 
-    console.log('< responseRaw > ', value)
+    // console.log('< responseRaw > ', value)
     if (!!value) {
       setState({
         events: value,
         loading: false
       })
+
+      const convertedNumber = value.split('.')
+      // eslint-disable-next-line
+      chrome.action.setBadgeText({ text: `${convertedNumber[0]}k` })
     }
   }
 

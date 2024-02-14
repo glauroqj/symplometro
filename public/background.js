@@ -1,7 +1,19 @@
+// Add a listener for alarms
+chrome.alarms.onAlarm.addListener((alarm) => {
+  // When the alarm fires, set the icon path
+  // chrome.action.setIcon({
+  //   path: getRandomIconPath(),
+  // });
+  // console.log('< ALARMS LISTENER > ', alarm)
+  if (alarm?.name === 'fetchSiteData') {
+    fetchSite('https://www.sympla.com.br')
+    startAlarm('fetchSiteData', 15)
+  }
+})
 // Listen for tab activation
 chrome.runtime.onMessage.addListener(
   function (message, sender, senderResponse) {
-    console.log('< BG > ', message, sender)
+    // console.log('< BG > ', message, sender)
     if (message.type === 'callSite') {
       fetchSite(message.url).then((resp) => {
         // console.log('< GET HTML HERE > ', resp)
@@ -12,6 +24,16 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
+// Start the alarm when the extension is installed or updated
+chrome.runtime.onInstalled.addListener(() => {
+  // Start an alarm with the specified name and delay in minutes
+  // console.log('< ON INSTALLED >')
+  fetchSite('https://www.sympla.com.br')
+  startAlarm('fetchSiteData', 15)
+})
+
+// --------------- METHODS -------------------
+
 async function fetchSite(url) {
   try {
     const responseRaw = await fetch(url)
@@ -19,14 +41,48 @@ async function fetchSite(url) {
     if (!responseRaw.ok) {
       throw new Error('Failed to fetch HTML')
     }
-
     const html = await responseRaw.text()
 
-    return html
+    // Sample HTML content
+    const htmlContent = html
+
+    // Regular expression to match the pattern of the text
+    const regex = /<strong>([\d.]+)<\/strong>\s+eventos disponíveis/
+
+    // Match the pattern in the HTML content
+    const match = htmlContent.match(regex)
+
+    // Extract the value if a match is found
+    if (match && match.length > 1) {
+      const value = match[1] // Extracted value
+      // console.log('< FINAL VALUE >', value) // Output: 41.310
+
+      const convertedNumber = value.split('.')
+      // eslint-disable-next-line
+      chrome.action.setBadgeText({ text: `${convertedNumber[0]}k` })
+
+      return value
+    } else {
+      console.log('Value not found or pattern mismatch')
+      return '---'
+    }
   } catch (e) {
     console.error('Error fetching data:', e)
   }
 }
+
+// Function to start an alarm
+async function startAlarm(name, duration) {
+  // console.log('< START ALARM > ', name)
+  // Create an alarm with the specified name and delay in minutes
+  try {
+    await chrome.alarms.create(name, { delayInMinutes: duration })
+  } catch (e) {
+    console.error('Error start alarm:', e)
+  }
+}
+
+// setInterval(fetchSite('https://www.sympla.com.br'), 10000)
 
 // async function fetchDataAndSave() {
 //   try {
