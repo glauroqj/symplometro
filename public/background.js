@@ -1,3 +1,4 @@
+const INTERVAL_ALARM_VALUE = 40
 // Add a listener for alarms
 chrome.alarms.onAlarm.addListener((alarm) => {
   // When the alarm fires, set the icon path
@@ -6,8 +7,8 @@ chrome.alarms.onAlarm.addListener((alarm) => {
   // });
   // console.log('< ALARMS LISTENER > ', alarm)
   if (alarm?.name === 'fetchSiteData') {
-    fetchSite('https://www.sympla.com.br')
-    startAlarm('fetchSiteData', 15)
+    fetchSite('https://www.sympla.com.br', true)
+    startAlarm('fetchSiteData', INTERVAL_ALARM_VALUE)
   }
 })
 // Listen for tab activation
@@ -29,12 +30,12 @@ chrome.runtime.onInstalled.addListener(() => {
   // Start an alarm with the specified name and delay in minutes
   // console.log('< ON INSTALLED >')
   fetchSite('https://www.sympla.com.br')
-  startAlarm('fetchSiteData', 15)
+  startAlarm('fetchSiteData', INTERVAL_ALARM_VALUE)
 })
 
 // --------------- METHODS -------------------
 
-async function fetchSite(url) {
+async function fetchSite(url, hasNotification = false) {
   try {
     const responseRaw = await fetch(url)
 
@@ -57,9 +58,9 @@ async function fetchSite(url) {
       const value = match[1] // Extracted value
       // console.log('< FINAL VALUE >', value) // Output: 41.310
 
-      const convertedNumber = value.split('.')
-      // eslint-disable-next-line
-      chrome.action.setBadgeText({ text: `${convertedNumber[0]}k` })
+      handleBadge(value)
+
+      if (hasNotification) handleNotification(value)
 
       return value
     } else {
@@ -71,15 +72,41 @@ async function fetchSite(url) {
   }
 }
 
+function handleNotification(value) {
+  const template = {
+    type: 'basic',
+    iconUrl: './symplometro-128.png',
+    message: `${value} eventos`,
+    title: 'Symplômetro informa:',
+    priority: 2
+  }
+
+  // console.log('< HANDLE NOTIFICATION  > ', value)
+
+  // eslint-disable-next-line
+  chrome.notifications.create('notification-symplometro', template)
+
+  setTimeout(function () {
+    // eslint-disable-next-line
+    chrome.notifications.clear('notification-symplometro')
+  }, 10000)
+}
+
+function handleBadge(badgeValue) {
+  const convertedNumber = badgeValue.split('.')
+  // eslint-disable-next-line
+  chrome.action.setBadgeText({ text: `${convertedNumber[0]}k` })
+}
+
 // Function to start an alarm
 async function startAlarm(name, duration) {
-  // console.log('< START ALARM > ', name)
+  // console.log('< START ALARM > ', name, duration)
   // Create an alarm with the specified name and delay in minutes
-  try {
-    await chrome.alarms.create(name, { delayInMinutes: duration })
-  } catch (e) {
-    console.error('Error start alarm:', e)
-  }
+  await chrome.alarms.create(name, { periodInMinutes: duration })
+  // try {
+  // } catch (e) {
+  //   console.error('Error start alarm:', e)
+  // }
 }
 
 // setInterval(fetchSite('https://www.sympla.com.br'), 10000)
@@ -223,13 +250,13 @@ async function startAlarm(name, duration) {
 //     const notification = JSON.parse(notificationPayload).notification
 //     if (!notification) return false
 //   }
-//   let options = {
-//     type: 'basic',
-//     iconUrl: './symplometro-128.png',
-//     message: data,
-//     title: 'O show vai continuar time =]', /** Eventos Online */
-//     eventTime: 3000
-//   }
+// let options = {
+//   type: 'basic',
+//   iconUrl: './symplometro-128.png',
+//   message: data,
+//   title: 'O show vai continuar time =]', /** Eventos Online */
+//   eventTime: 3000
+// }
 //   // console.log('< SHOW NOTIFICATION > ', options)
 //   if (Notification.permission === 'granted') {
 // 		// let notification = new Notification('', options);

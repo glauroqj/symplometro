@@ -8,7 +8,7 @@ import App from './App'
 // import firebase from "firebase/app";
 // import { credentials } from "./credentials";
 
-console.log('< ENV > ', process.env.NODE_ENV)
+// console.log('< ENV > ', process.env.NODE_ENV)
 
 // firebase.initializeApp(credentials)
 

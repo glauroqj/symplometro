@@ -3,7 +3,7 @@
   "name": "Symplometro",
   "short_name": "Symplometro",
   "description": "Contador de eventos. Apenas para symplers! =]",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "author": "Glauro Quintão Juliani",
   "icons": {
     "16": "symplometro-20.png",
@@ -19,7 +19,7 @@
     "default_title": "Symplometro",
     "default_popup": "index.html"
   },
-  "permissions": ["alarms", "activeTab"],
+  "permissions": ["alarms", "activeTab", "notifications"],
   "background": {
     "service_worker": "background.js"
   },
